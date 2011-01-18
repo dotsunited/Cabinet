@@ -84,60 +84,60 @@ Alternatively, the first argument can be an associative array. The adapter class
 
 Once you created the adapter, you can store, retrieve and get informations about files with the following methods:
 
-  * Import a external local file:
-        <?php
-        $adapter->import($external, $file);
-        ?>
+#### Import a external local file: ####
+    <?php
+    $adapter->import($external, $file);
+    ?>
 
-  * Write data to a file:
-        <?php
-        $adapter->write($file, $data);
-        ?>
+#### Write data to a file: ####
+    <?php
+    $adapter->write($file, $data);
+    ?>
 
-  * Read data from a file:
-        <?php
-        $adapter->read($file);
-        ?>
+#### Read data from a file: ####
+    <?php
+    $adapter->read($file);
+    ?>
 
-  * Get a read-only stream resource for a file:
-        <?php
-        $adapter->stream($file);
-        ?>
+#### Get a read-only stream resource for a file: ####
+    <?php
+    $adapter->stream($file);
+    ?>
 
-  * Copy a file internally:
-        <?php
-        $adapter->copy($src, $dest);
-        ?>
+#### Copy a file internally: ####
+    <?php
+    $adapter->copy($src, $dest);
+    ?>
 
-  * Rename a file internally:
-        <?php
-        $adapter->rename($src, $dest);
-        ?>
+#### Rename a file internally: ####
+    <?php
+    $adapter->rename($src, $dest);
+    ?>
 
-  * Delete a file:
-        <?php
-        $adapter->unlink($file);
-        ?>
+#### Delete a file: ####
+    <?php
+    $adapter->unlink($file);
+    ?>
 
-  * Check whether a file exists:
-        <?php
-        $adapter->exists($file);
-        ?>
+#### Check whether a file exists: ####
+    <?php
+    $adapter->exists($file);
+    ?>
 
-  * Get a files size:
-        <?php
-        $adapter->size($file);
-        ?>
+#### Get a files size: ####
+    <?php
+    $adapter->size($file);
+    ?>
 
-  * Get a files MIME content type:
-        <?php
-        $adapter->type($file);
-        ?>
+#### Get a files MIME content type: ####
+    <?php
+    $adapter->type($file);
+    ?>
 
-  * Get the web-accessible uri for the given file:
-        <?php
-        $adapter->uri($file);
-        ?>
+#### Get the web-accessible uri for the given file: ####
+    <?php
+    $adapter->uri($file);
+    ?>
 
 ## Adapters ##
 
