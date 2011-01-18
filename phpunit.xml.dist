@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php">
+    <testsuite name="DotsUnited\Cabinet Test Suite">
+        <directory suffix="Test.php">./tests/DotsUnited/Cabinet/</directory>
+    </testsuite>
+    <php>
+        <const name="TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_ENABLED" value="false"/>
+
+        <!-- Your AWS key and secret, only needed when online tests are enabled -->
+        <const name="TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_AWS_KEY" value=""/>
+        <const name="TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_AWS_SECRET_KEY" value=""/>
+
+        <const name="TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_BUCKET_NAME" value="dotsunited-cabinet-unittests"/>
+        <!-- One of the \AmazonS3::REGION_* contants -->
+        <const name="TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_BUCKET_REGION" value=""/>
+    </php>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./src/DotsUnited/Cabinet/</directory>
+        </whitelist>
+    </filter>
+</phpunit>
