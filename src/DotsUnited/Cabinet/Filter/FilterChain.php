@@ -32,7 +32,7 @@ class FilterChain implements FilterInterface
     /**
      * Adds a filter to the chain.
      *
-     * @param Filter $filter
+     * @param FilterInterface $filter
      * @param string $placement
      * @return FilterChain
      */
@@ -49,7 +49,7 @@ class FilterChain implements FilterInterface
     /**
      * Add a filter to the end of the chain.
      *
-     * @param Filter $filter
+     * @param FilterInterface $filter
      * @return FilterChain
      */
     public function appendFilter(FilterInterface $filter)
@@ -60,7 +60,7 @@ class FilterChain implements FilterInterface
     /**
      * Add a filter to the start of the chain.
      *
-     * @param Filter $filter
+     * @param FilterInterface $filter
      * @return FilterChain
      */
     public function prependFilter(FilterInterface $filter)
@@ -71,7 +71,7 @@ class FilterChain implements FilterInterface
     /**
      * Get all the filters.
      *
-     * @return Filter[]
+     * @return FilterInterface[]
      */
     public function getFilters()
     {
