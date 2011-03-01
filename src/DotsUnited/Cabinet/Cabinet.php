@@ -24,9 +24,6 @@ class Cabinet
      *
      * First argument may be a string containing the adapter class
      * name, e.g. 'DotsUnited\Cabinet\Adapter\StreamAdapter'.
-     * If it does not contain a namespace separator (\), it is assumed to be
-     * the base of an adapter class name, e.g. 'Stream' corresponds to class
-     * DotsUnited\Cabinet\Adapter\StreamAdapter.
      *
      * First argument may alternatively be an array. The adapter class name
      * is read from the 'adapter' key. The adapter config parameters are read
@@ -38,7 +35,7 @@ class Cabinet
      * If the first argument is of type array, it is assumed to contain
      * all parameters, and the second argument is ignored.
      *
-     * @param string|array $adapter string Name of (base) adapter class, or array.
+     * @param string|array $adapter string Name of adapter class, or array.
      * @param array $config OPTIONAL; An array of adapter configurations.
      * @return \DotsUnited\Cabinet\Adapter\AdapterInterface
      * @throws \InvalidArgumentException
@@ -59,10 +56,6 @@ class Cabinet
 
         if (!is_string($adapter) || empty($adapter)) {
             throw new \InvalidArgumentException('Adapter name must be specified in a string');
-        }
-
-        if (false === strpos($adapter, '\\')) {
-            $adapter = 'DotsUnited\\Cabinet\\Adapter\\' . ucfirst($adapter) . 'Adapter';
         }
 
         $instance = new $adapter($config);

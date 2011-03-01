@@ -19,9 +19,9 @@ namespace DotsUnited\Cabinet;
  */
 class CabinetTest extends \PHPUnit_Framework_TestCase
 {
-    public function testFactoryAdapterShortname()
+    public function testFactoryAdapterClassName()
     {
-        $adapter = Cabinet::factory('Stream');
+        $adapter = Cabinet::factory('DotsUnited\Cabinet\Adapter\StreamAdapter');
 
         $this->assertType('DotsUnited\Cabinet\Adapter\AdapterInterface', $adapter);
         $this->assertTrue(class_exists('DotsUnited\Cabinet\Adapter\StreamAdapter'));
@@ -47,7 +47,7 @@ class CabinetTest extends \PHPUnit_Framework_TestCase
         Cabinet::factory('DotsUnited\Cabinet\TestAsset\TestClass');
     }
 
-    public function testFactoryExceptionInvalidAdapterName()
+    public function testFactoryExceptionInvalidAdapterClassName()
     {
         $this->setExpectedException(
             '\InvalidArgumentException',
