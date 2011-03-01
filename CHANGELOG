@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.9.1 (2011-03-01)
+------------------
+
+  * Rename classes to comply with the Symfony2 conventions (https://github.com/dotsunited/Cabinet/commit/8f153b23e0948dc6ec059ad1ba50e0c892b458e7)
+  * Remove short adapter class name (https://github.com/dotsunited/Cabinet/commit/a207849706927db05f18248482bdee76003437bf)
+
 0.9.0 (2011-01-18)
 ------------------
 
