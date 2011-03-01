@@ -23,7 +23,10 @@
   <api>beta</api>
  </stability>
  <license uri="https://github.com/dotsunited/Cabinet/blob/master/LICENSE">New BSD License</license>
- <notes>https://github.com/dotsunited/Cabinet#readme</notes>
+ <notes>
+     * Rename classes to comply with the Symfony2 conventions (https://github.com/dotsunited/Cabinet/commit/8f153b23e0948dc6ec059ad1ba50e0c892b458e7)
+     * Remove short adapter class name (https://github.com/dotsunited/Cabinet/commit/a207849706927db05f18248482bdee76003437bf)
+ </notes>
  <contents>
   <dir name="/">
    <file name="LICENSE" role="doc" />
@@ -35,15 +38,15 @@
        <file install-as="DotsUnited/Cabinet/Adapter/AdapterInterface.php" name="AdapterInterface.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
-       <file install-as="DotsUnited/Cabinet/Adapter/AmazonS3.php" name="AmazonS3.php" role="php">
+       <file install-as="DotsUnited/Cabinet/Adapter/AmazonS3Adapter.php" name="AmazonS3Adapter.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
-       <file install-as="DotsUnited/Cabinet/Adapter/Stream.php" name="Stream.php" role="php">
+       <file install-as="DotsUnited/Cabinet/Adapter/StreamAdapter.php" name="StreamAdapter.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
       </dir>
       <dir name="Filter">
-       <file install-as="DotsUnited/Cabinet/Filter/Callback.php" name="Callback.php" role="php">
+       <file install-as="DotsUnited/Cabinet/Filter/CallbackFilter.php" name="CallbackFilter.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
        <file install-as="DotsUnited/Cabinet/Filter/FilterInterface.php" name="FilterInterface.php" role="php">
@@ -52,7 +55,7 @@
        <file install-as="DotsUnited/Cabinet/Filter/FilterChain.php" name="FilterChain.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
-       <file install-as="DotsUnited/Cabinet/Filter/HashedSubpath.php" name="HashedSubpath.php" role="php">
+       <file install-as="DotsUnited/Cabinet/Filter/HashedSubpathFilter.php" name="HashedSubpathFilter.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
       </dir>
@@ -61,7 +64,7 @@
         <file install-as="DotsUnited/Cabinet/MimeType/Detector/DetectorInterface.php" name="DetectorInterface.php" role="php">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
-        <file install-as="DotsUnited/Cabinet/MimeType/Detector/Fileinfo.php" name="Fileinfo.php" role="php">
+        <file install-as="DotsUnited/Cabinet/MimeType/Detector/FileinfoDetector.php" name="FileinfoDetector.php" role="php">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
        </dir>
