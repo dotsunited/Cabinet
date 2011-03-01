@@ -49,7 +49,7 @@ Instances of Cabinet adapters can be either created directly or using the static
 You can create an instance of an adapter using its constructor. An adapter constructor takes one argument, which is an array of configuration parameters.
 
     <?php
-    $adapter = new \DotsUnited\Cabinet\Adapter\Stream(array(
+    $adapter = new \DotsUnited\Cabinet\Adapter\StreamAdapter(array(
         'base_path' => '/my/base/path',
         'base_uri'  => 'http://static.example.com'
     ));
@@ -59,10 +59,10 @@ You can create an instance of an adapter using its constructor. An adapter const
 
 As an alternative to using an adapter constructor directly, you can create an instance of an adapter using the static method `DotsUnited\Cabinet\Cabinet::factory()`.
 
-The first argument is a string that names the adapter class (for example '\DotsUnited\Cabinet\Adapter\Stream'). The second argument is the same array of parameters you would have given to the adapter constructor.
+The first argument is a string that names the adapter class (for example '\DotsUnited\Cabinet\Adapter\StreamAdapter'). The second argument is the same array of parameters you would have given to the adapter constructor.
 
     <?php
-    $adapter = \DotsUnited\Cabinet\Cabinet::factory('\DotsUnited\Cabinet\Adapter\Stream', array(
+    $adapter = \DotsUnited\Cabinet\Cabinet::factory('\DotsUnited\Cabinet\Adapter\StreamAdapter', array(
         'base_path' => '/my/base/path',
         'base_uri'  => 'http://static.example.com'
     ));
@@ -72,7 +72,7 @@ Alternatively, the first argument can be an associative array. The adapter class
 
     <?php
     $adapter = \DotsUnited\Cabinet\Cabinet::factory(array(
-        'adapter' => '\DotsUnited\Cabinet\Adapter\Stream',
+        'adapter' => '\DotsUnited\Cabinet\Adapter\StreamAdapter',
         'config' => array(
             'base_path' => '/my/base/path',
             'base_uri'  => 'http://static.example.com'
@@ -143,14 +143,14 @@ Once you created the adapter, you can store, retrieve and get informations about
 
 Cabinet offers two adapters:
 
-  * `DotsUnited\Cabinet\Adapter\Stream` for [PHP streams](http://php.net/stream)
-  * `DotsUnited\Cabinet\Adapter\AmazonS3` for [Amazon S3](https://s3.amazonaws.com)
+  * `DotsUnited\Cabinet\Adapter\StreamAdapter` for [PHP streams](http://php.net/stream)
+  * `DotsUnited\Cabinet\Adapter\AmazonS3Adapter` for [Amazon S3](https://s3.amazonaws.com)
 
 Each adapter accepts its own set of configuration parameters which can be passed as an associative array to the constructor.
 
-### DotsUnited\Cabinet\Adapter\Stream ###
+### DotsUnited\Cabinet\Adapter\StreamAdapter ###
 
-Configuration parameters for `DotsUnited\Cabinet\Adapter\Stream`:
+Configuration parameters for `DotsUnited\Cabinet\Adapter\StreamAdapter`:
 
   * `base_path`:
      Path where to store the files.
@@ -167,9 +167,9 @@ Configuration parameters for `DotsUnited\Cabinet\Adapter\Stream`:
   * `filename_filter`:
     An instance of `DotsUnited\Cabinet\Filter\FilterInterface`. Filename filters are explained in the next section.
 
-### DotsUnited\Cabinet\Adapter\AmazonS3 ###
+### DotsUnited\Cabinet\Adapter\AmazonS3Adapter ###
 
-Configuration parameters for `DotsUnited\Cabinet\Adapter\AmazonS3`:
+Configuration parameters for `DotsUnited\Cabinet\Adapter\AmazonS3Adapter`:
 
   * `aws_key`:
     The AWS key for your account.
@@ -211,18 +211,18 @@ If you need multiple filters, you can use `DotsUnited\Cabinet\Filter\FilterChain
 
 ### Examples ###
 
-Cabinet provides a filter to prepend a hashed subpath to the filename and is intended to be used with the `DotsUnited\Cabinet\Adapter\Stream` adapter.
+Cabinet provides a filter to prepend a hashed subpath to the filename and is intended to be used with the `DotsUnited\Cabinet\Adapter\StreamAdapter` adapter.
 
 This spreads the files over subdirectories to ensure performance by avoiding to many files in one directory. This is done by using a configurable number of characters of the filename's MD5 as a directory name. That pretty much guarantees an even spread.
 
-Simply register the `DotsUnited\Cabinet\Filter\HashedSubpath` filter with the adapter:
+Simply register the `DotsUnited\Cabinet\Filter\HashedSubpathFilter` filter with the adapter:
 
     <?php
     $config = array(
         'level' => 4
     );
 
-    $adapter->setFilenameFilter(new \DotsUnited\Cabinet\Filter\HashedSubpath($config);
+    $adapter->setFilenameFilter(new \DotsUnited\Cabinet\Filter\HashedSubpathFilter($config);
     ?>
 
 ## License ##
