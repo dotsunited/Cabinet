@@ -15,9 +15,9 @@ namespace DotsUnited\Cabinet\Filter;
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  * @version @package_version@
  *
- * @covers  DotsUnited\Cabinet\Filter\Callback
+ * @covers  DotsUnited\Cabinet\Filter\CallbackFilter
  */
-class CallbackTest extends \PHPUnit_Framework_TestCase
+class CallbackFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testCallback()
     {
@@ -27,7 +27,7 @@ class CallbackTest extends \PHPUnit_Framework_TestCase
             return 'bar';
         };
 
-        $filter = new Callback($callback);
+        $filter = new CallbackFilter($callback);
         $result = $filter->filter('foo');
 
         $this->assertTrue($called);

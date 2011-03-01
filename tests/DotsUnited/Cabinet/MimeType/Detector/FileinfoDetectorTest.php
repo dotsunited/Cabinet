@@ -15,12 +15,12 @@ namespace DotsUnited\Cabinet\MimeType\Detector;
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  * @version @package_version@
  *
- * @covers  DotsUnited\Cabinet\MimeType\Detector\Fileinfo
+ * @covers  DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector
  */
-class FileinfoTest extends \PHPUnit_Framework_TestCase
+class FileinfoDetectorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var DotsUnited\Cabinet\MimeType\Detector\Fileinfo
+     * @var DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector
      */
     protected $detector;
 
@@ -32,7 +32,7 @@ class FileinfoTest extends \PHPUnit_Framework_TestCase
             );
         }
 
-        $this->detector = new Fileinfo(__DIR__ . '/_files/magic');
+        $this->detector = new FileinfoDetector(__DIR__ . '/_files/magic');
     }
 
     public function tearDown()

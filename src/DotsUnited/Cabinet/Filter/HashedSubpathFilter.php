@@ -12,12 +12,12 @@
 namespace DotsUnited\Cabinet\Filter;
 
 /**
- * DotsUnited\Cabinet\Filter\HashedSubpath
+ * DotsUnited\Cabinet\Filter\HashedSubpathFilter
  *
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  * @version @package_version@
  */
-class HashedSubpath implements FilterInterface
+class HashedSubpathFilter implements FilterInterface
 {
     /**
      * The level.

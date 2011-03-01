@@ -15,9 +15,9 @@ namespace DotsUnited\Cabinet\Adapter;
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  * @version @package_version@
  *
- * @covers  DotsUnited\Cabinet\Adapter\AmazonS3
+ * @covers  DotsUnited\Cabinet\Adapter\AmazonS3Adapter
  */
-class AmazonS3OnlineTest extends \PHPUnit_Framework_TestCase
+class AmazonS3AdapterOnlineTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \AmazonS3
@@ -88,7 +88,7 @@ class AmazonS3OnlineTest extends \PHPUnit_Framework_TestCase
             'mime_type_detector' => $mimeTypeDetector
         );
 
-        $adapter = new AmazonS3($config);
+        $adapter = new AmazonS3Adapter($config);
 
         return $adapter;
     }

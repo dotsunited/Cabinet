@@ -15,9 +15,9 @@ namespace DotsUnited\Cabinet\Adapter;
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  * @version @package_version@
  *
- * @covers  DotsUnited\Cabinet\Adapter\AmazonS3
+ * @covers  DotsUnited\Cabinet\Adapter\AmazonS3Adapter
  */
-class AmazonS3Test extends \PHPUnit_Framework_TestCase
+class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setupAdapter()
     {
@@ -73,7 +73,7 @@ class AmazonS3Test extends \PHPUnit_Framework_TestCase
             'filename_filter'    => $filenameFilter
         );
 
-        $adapter = new AmazonS3($config);
+        $adapter = new AmazonS3Adapter($config);
 
         return $adapter;
     }
@@ -98,7 +98,7 @@ class AmazonS3Test extends \PHPUnit_Framework_TestCase
 
     public function testDefaultConfig()
     {
-        $adapter = new AmazonS3(array(
+        $adapter = new AmazonS3Adapter(array(
             'aws_key'        => 'foo',
             'aws_secret_key' => 'bar'
         ));
@@ -108,7 +108,7 @@ class AmazonS3Test extends \PHPUnit_Framework_TestCase
         $this->assertEquals(\AmazonS3::STORAGE_STANDARD, $adapter->getStorageClass());
         $this->assertEquals(\AmazonS3::ACL_PRIVATE, $adapter->getAcl());
         $this->assertSame(0, $adapter->getUriExpirationTime());
-        $this->assertType('DotsUnited\Cabinet\MimeType\Detector\Fileinfo', $adapter->getMimeTypeDetector());
+        $this->assertType('DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector', $adapter->getMimeTypeDetector());
         $this->assertNull($adapter->getFilenameFilter());
     }
 
@@ -131,7 +131,7 @@ class AmazonS3Test extends \PHPUnit_Framework_TestCase
             'filename_filter'     => $filterMock
         );
 
-        $adapter = new AmazonS3($config);
+        $adapter = new AmazonS3Adapter($config);
 
         $this->assertEquals($config['bucket'], $adapter->getBucket());
         $this->assertEquals($config['storage_class'], $adapter->getStorageClass());
@@ -159,7 +159,7 @@ class AmazonS3Test extends \PHPUnit_Framework_TestCase
             'aws_secret_key' => null
         );
 
-        new AmazonS3($config);
+        new AmazonS3Adapter($config);
     }
 
     public function testConstructorPassesAmazonS3ConfigAsArrayToInstance()
@@ -179,7 +179,7 @@ class AmazonS3Test extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $adapter = new AmazonS3($config);
+        $adapter = new AmazonS3Adapter($config);
         $this->assertEquals('test.example.com', $adapter->getAmazonS3()->vhost);
     }
 

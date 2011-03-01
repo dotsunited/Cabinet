@@ -11,16 +11,16 @@
 
 namespace DotsUnited\Cabinet\Adapter;
 
-use DotsUnited\Cabinet\Filter\HashedSubpath;
+use DotsUnited\Cabinet\Filter\HashedSubpathFilter;
 
 /**
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  * @version @package_version@
  *
- * @covers  DotsUnited\Cabinet\Adapter\Stream
- * @covers  DotsUnited\Cabinet\Filter\HashedSubpath
+ * @covers  DotsUnited\Cabinet\Adapter\StreamAdapter
+ * @covers  DotsUnited\Cabinet\Filter\HashedSubpathFilter
  */
-class StreamHashedSubpathIntegrationTest extends \PHPUnit_Framework_TestCase
+class StreamAdapterHashedSubpathFilterIntegrationTest extends \PHPUnit_Framework_TestCase
 {
     protected function setupAdapter()
     {
@@ -39,13 +39,13 @@ class StreamHashedSubpathIntegrationTest extends \PHPUnit_Framework_TestCase
             return false;
         }
 
-        $filter = new HashedSubpath();
+        $filter = new HashedSubpathFilter();
         $filter
             ->setLevel(4)
             ->setPreserveDirs(true);
 
         \vfsStream::setup('StreamHashedSubpathIntegrationTest');
-        $adapter = new Stream();
+        $adapter = new StreamAdapter();
         $adapter->setBasePath(\vfsStream::url('StreamHashedSubpathIntegrationTest'));
         $adapter->setFilenameFilter($filter);
 

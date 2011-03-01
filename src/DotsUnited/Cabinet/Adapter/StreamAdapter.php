@@ -13,15 +13,15 @@ namespace DotsUnited\Cabinet\Adapter;
 
 use DotsUnited\Cabinet\Filter\FilterInterface;
 use DotsUnited\Cabinet\MimeType\Detector\DetectorInterface;
-use DotsUnited\Cabinet\MimeType\Detector\Fileinfo;
+use DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector;
 
 /**
- * DotsUnited\Cabinet\Adapter\Stream
+ * DotsUnited\Cabinet\Adapter\StreamAdapter
  *
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  * @version @package_version@
  */
-class Stream implements AdapterInterface
+class StreamAdapter implements AdapterInterface
 {
     /**
      * The base path.
@@ -268,7 +268,7 @@ class Stream implements AdapterInterface
     public function getMimeTypeDetector()
     {
         if (null === $this->mimeTypeDetector) {
-            $this->setMimeTypeDetector(new Fileinfo());
+            $this->setMimeTypeDetector(new FileinfoDetector());
         }
 
         return $this->mimeTypeDetector;

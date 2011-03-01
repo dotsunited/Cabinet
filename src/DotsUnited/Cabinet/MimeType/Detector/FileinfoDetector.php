@@ -12,12 +12,12 @@
 namespace DotsUnited\Cabinet\MimeType\Detector;
 
 /**
- * DotsUnited\Cabinet\MimeType\Detector\Fileinfo
+ * DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector
  *
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  * @version @package_version@
  */
-class Fileinfo implements DetectorInterface
+class FileinfoDetector implements DetectorInterface
 {
     /**
      * The magic file.

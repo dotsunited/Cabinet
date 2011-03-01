@@ -15,13 +15,13 @@ namespace DotsUnited\Cabinet\Filter;
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  * @version @package_version@
  *
- * @covers  DotsUnited\Cabinet\Filter\HashedSubpath
+ * @covers  DotsUnited\Cabinet\Filter\HashedSubpathFilter
  */
-class HashedSubpathTest extends \PHPUnit_Framework_TestCase
+class HashedSubpathFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testDefaultConfig()
     {
-        $filter = new HashedSubpath();
+        $filter = new HashedSubpathFilter();
 
         $this->assertEquals(0, $filter->getLevel());
         $this->assertEquals('md5', $filter->getCallback());
@@ -36,7 +36,7 @@ class HashedSubpathTest extends \PHPUnit_Framework_TestCase
             'preserve_dirs' => true
         );
 
-        $filter = new HashedSubpath($config);
+        $filter = new HashedSubpathFilter($config);
 
         $this->assertEquals($config['level'], $filter->getLevel());
         $this->assertEquals($config['callback'], $filter->getCallback());
@@ -47,13 +47,13 @@ class HashedSubpathTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\InvalidArgumentException', 'Invalid callback');
 
-        $filter = new HashedSubpath();
+        $filter = new HashedSubpathFilter();
         $filter->setCallback(null);
     }
 
     public function testFilterReturnsOriginalValueIfLevelIsZero()
     {
-        $filter = new HashedSubpath();
+        $filter = new HashedSubpathFilter();
         $filter->setLevel(0);
 
         $this->assertEquals('foo.txt', $filter->filter('foo.txt'));
@@ -61,7 +61,7 @@ class HashedSubpathTest extends \PHPUnit_Framework_TestCase
 
     public function testFilterDoesNotPreserveDirsIfSetToFalse()
     {
-        $filter = new HashedSubpath();
+        $filter = new HashedSubpathFilter();
         $filter
             ->setLevel(5)
             ->setCallback('md5')
@@ -75,7 +75,7 @@ class HashedSubpathTest extends \PHPUnit_Framework_TestCase
 
     public function testFilterPreservesDirsIfSetToTrue()
     {
-        $filter = new HashedSubpath();
+        $filter = new HashedSubpathFilter();
         $filter
             ->setLevel(5)
             ->setCallback('md5')
@@ -90,7 +90,7 @@ class HashedSubpathTest extends \PHPUnit_Framework_TestCase
     public function testFilterThrowsExceptionIfCallbackReturnsEmptyString()
     {
         $this->setExpectedException('\RuntimeException', 'Invalid callback (empty hash returned)');
-        $filter = new HashedSubpath();
+        $filter = new HashedSubpathFilter();
         $filter
             ->setLevel(5)
             ->setCallback(function($value) {

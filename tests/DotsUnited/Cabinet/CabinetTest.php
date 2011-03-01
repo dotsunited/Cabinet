@@ -24,8 +24,8 @@ class CabinetTest extends \PHPUnit_Framework_TestCase
         $adapter = Cabinet::factory('Stream');
 
         $this->assertType('DotsUnited\Cabinet\Adapter\AdapterInterface', $adapter);
-        $this->assertTrue(class_exists('DotsUnited\Cabinet\Adapter\Stream'));
-        $this->assertType('DotsUnited\Cabinet\Adapter\Stream', $adapter);
+        $this->assertTrue(class_exists('DotsUnited\Cabinet\Adapter\StreamAdapter'));
+        $this->assertType('DotsUnited\Cabinet\Adapter\StreamAdapter', $adapter);
     }
 
     public function testFactoryCustomAdapter()

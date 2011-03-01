@@ -13,19 +13,19 @@ namespace DotsUnited\Cabinet\Adapter;
 
 use DotsUnited\Cabinet\Filter\FilterInterface;
 use DotsUnited\Cabinet\MimeType\Detector\DetectorInterface;
-use DotsUnited\Cabinet\MimeType\Detector\Fileinfo;
+use DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector;
 
 if (!class_exists('\CFRuntime', false)) {
     include_once 'AWSSDKforPHP/sdk.class.php';
 }
 
 /**
- * DotsUnited\Cabinet\Adapter\AmazonS3
+ * DotsUnited\Cabinet\Adapter\AmazonS3Adapter
  *
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  * @version @package_version@
  */
-class AmazonS3 implements AdapterInterface
+class AmazonS3Adapter implements AdapterInterface
 {
     /**
      * AmazonS3 class instance.
@@ -290,7 +290,7 @@ class AmazonS3 implements AdapterInterface
     public function getMimeTypeDetector()
     {
         if (null === $this->mimeTypeDetector) {
-            $this->setMimeTypeDetector(new Fileinfo());
+            $this->setMimeTypeDetector(new FileinfoDetector());
         }
 
         return $this->mimeTypeDetector;

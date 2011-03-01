@@ -23,10 +23,10 @@ class Cabinet
      * Factory for DotsUnited\Cabinet\Adapter classes.
      *
      * First argument may be a string containing the adapter class
-     * name, e.g. 'DotsUnited\Cabinet\Adapter\Stream'.
+     * name, e.g. 'DotsUnited\Cabinet\Adapter\StreamAdapter'.
      * If it does not contain a namespace separator (\), it is assumed to be
      * the base of an adapter class name, e.g. 'Stream' corresponds to class
-     * DotsUnited\Cabinet\Adapter\Stream.
+     * DotsUnited\Cabinet\Adapter\StreamAdapter.
      *
      * First argument may alternatively be an array. The adapter class name
      * is read from the 'adapter' key. The adapter config parameters are read
@@ -62,7 +62,7 @@ class Cabinet
         }
 
         if (false === strpos($adapter, '\\')) {
-            $adapter = 'DotsUnited\\Cabinet\\Adapter\\' . $adapter;
+            $adapter = 'DotsUnited\\Cabinet\\Adapter\\' . ucfirst($adapter) . 'Adapter';
         }
 
         $instance = new $adapter($config);

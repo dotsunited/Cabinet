@@ -15,9 +15,9 @@ namespace DotsUnited\Cabinet\Adapter;
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  * @version @package_version@
  *
- * @covers  DotsUnited\Cabinet\Adapter\Stream
+ * @covers  DotsUnited\Cabinet\Adapter\StreamAdapter
  */
-class StreamTest extends \PHPUnit_Framework_TestCase
+class StreamAdapterTest extends \PHPUnit_Framework_TestCase
 {
     protected function setupAdapter()
     {
@@ -45,7 +45,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('text/plain'));
 
         \vfsStream::setup('StreamTest');
-        $adapter = new Stream();
+        $adapter = new StreamAdapter();
         $adapter->setBasePath(\vfsStream::url('StreamTest'));
         $adapter->setMimeTypeDetector($mimeTypeDetector);
 
@@ -56,14 +56,14 @@ class StreamTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaultConfig()
     {
-        $adapter = new Stream();
+        $adapter = new StreamAdapter();
 
         $this->assertNull($adapter->getBasePath());
         $this->assertNull($adapter->getBaseUri());
         $this->assertEquals(0700, $adapter->getDirectoryUmask());
         $this->assertEquals(0600, $adapter->getFileUmask());
         $this->assertType(\PHPUnit_Framework_Constraint_IsType::TYPE_RESOURCE, $adapter->getStreamContext());
-        $this->assertType('DotsUnited\Cabinet\MimeType\Detector\Fileinfo', $adapter->getMimeTypeDetector());
+        $this->assertType('DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector', $adapter->getMimeTypeDetector());
         $this->assertNull($adapter->getFilenameFilter());
     }
 
@@ -85,7 +85,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
             'filename_filter'    => $filterMock
         );
 
-        $adapter = new Stream($config);
+        $adapter = new StreamAdapter($config);
 
         $this->assertEquals($config['base_path'], $adapter->getBasePath());
         $this->assertEquals($config['base_uri'], $adapter->getBaseUri());
@@ -100,7 +100,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
 
     public function testSetBasePathTrimsTrailingSlash()
     {
-        $adapter = new Stream();
+        $adapter = new StreamAdapter();
         $adapter->setBasePath('/path/to/base/');
 
         $this->assertEquals('/path/to/base', $adapter->getBasePath());
@@ -108,7 +108,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
 
     public function testSetBasePathTrimsTrailingBackslash()
     {
-        $adapter = new Stream();
+        $adapter = new StreamAdapter();
         $adapter->setBasePath('C:\\Path\\To\\Base\\');
 
         $this->assertEquals('C:\\Path\\To\\Base', $adapter->getBasePath());
@@ -116,7 +116,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
 
     public function testSetBasePathDoesNotTrimTrailingSlashIfEndsWithDoublepointDoubleslash()
     {
-        $adapter = new Stream();
+        $adapter = new StreamAdapter();
         $adapter->setBasePath('proto://');
 
         $this->assertEquals('proto://', $adapter->getBasePath());
@@ -124,7 +124,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
 
     public function testSetBaseUriTrimsTrailingSlash()
     {
-        $adapter = new Stream();
+        $adapter = new StreamAdapter();
         $adapter->setBaseUri('/path/to/base/');
 
         $this->assertEquals('/path/to/base', $adapter->getBaseUri());
@@ -132,7 +132,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
 
     public function testSetBaseUriTrimsTrailingBackslash()
     {
-        $adapter = new Stream();
+        $adapter = new StreamAdapter();
         $adapter->setBaseUri('C:\\Path\\To\\Base\\');
 
         $this->assertEquals('C:\\Path\\To\\Base', $adapter->getBaseUri());
@@ -140,7 +140,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
 
     public function testSetBaseUriDoesNotTrimTrailingSlashIfEndsWithDoublepointDoubleslash()
     {
-        $adapter = new Stream();
+        $adapter = new StreamAdapter();
         $adapter->setBaseUri('proto://');
 
         $this->assertEquals('proto://', $adapter->getBaseUri());
@@ -148,7 +148,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
 
     public function testSetDirectoryUmaskConvertsString()
     {
-        $adapter = new Stream();
+        $adapter = new StreamAdapter();
         $adapter->setDirectoryUmask('0777');
 
         $this->assertSame(0777, $adapter->getDirectoryUmask());
@@ -156,7 +156,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
 
     public function testSetFileUmaskConvertsString()
     {
-        $adapter = new Stream();
+        $adapter = new StreamAdapter();
         $adapter->setFileUmask('0666');
 
         $this->assertSame(0666, $adapter->getFileUmask());
@@ -348,7 +348,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
 
     public function testUri()
     {
-        $adapter = new Stream();
+        $adapter = new StreamAdapter();
         $adapter->setBaseUri('cabinet://base/uri');
 
         $filenameFilter = $this->getMockBuilder('DotsUnited\Cabinet\Filter\FilterInterface')
@@ -368,7 +368,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
 
     public function testPath()
     {
-        $adapter = new Stream();
+        $adapter = new StreamAdapter();
         $adapter->setBasePath('c:\test');
 
         $filenameFilter = $this->getMockBuilder('DotsUnited\Cabinet\Filter\FilterInterface')
@@ -390,7 +390,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
 
     public function testPathUsesSlashIfBasePathContainsProtocol()
     {
-        $adapter = new Stream();
+        $adapter = new StreamAdapter();
         $adapter->setBasePath('cabinet://base/uri');
 
         $return = $adapter->path('test.txt');
