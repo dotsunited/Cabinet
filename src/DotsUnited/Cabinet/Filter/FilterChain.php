@@ -27,7 +27,7 @@ class FilterChain implements FilterInterface
      *
      * @var array
      */
-    protected $filters = array();
+    private $filters = array();
 
     /**
      * Adds a filter to the chain.

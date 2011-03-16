@@ -24,14 +24,14 @@ class FileinfoDetector implements DetectorInterface
      *
      * @var string
      */
-    protected $magicFile;
+    private $magicFile;
 
     /**
      * The finfo handle.
      *
      * @var resource
      */
-    protected $handle;
+    private $handle;
 
     /**
      * Contructor.
@@ -102,7 +102,7 @@ class FileinfoDetector implements DetectorInterface
      *
      * @return resource
      */
-    protected function getHandle()
+    private function getHandle()
     {
         if (null === $this->handle) {
             if ($this->magicFile) {
@@ -121,7 +121,7 @@ class FileinfoDetector implements DetectorInterface
      * @param string $type
      * @return string|null
      */
-    protected function fixType($type)
+    private function fixType($type)
     {
         if (false !== ($pos = strpos($type, ';'))) {
             $type = substr($type, 0, $pos);

@@ -22,7 +22,7 @@ class CallbackFilter implements FilterInterface
     /**
      * @var mixed
      */
-    protected $callback;
+    private $callback;
 
     /**
      * Constructor.

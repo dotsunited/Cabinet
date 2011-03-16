@@ -19,7 +19,7 @@ namespace DotsUnited\Cabinet\Adapter;
  */
 class StreamAdapterTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setupAdapter()
+    private function setupAdapter()
     {
         if (!class_exists('\vfsStream', false)) {
             if (false !== ($fp = @fopen('vfsStream/vfsStream.php', 'r', true))) {

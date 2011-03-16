@@ -22,7 +22,7 @@ class FileinfoDetectorTest extends \PHPUnit_Framework_TestCase
     /**
      * @var DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector
      */
-    protected $detector;
+    private $detector;
 
     public function setUp()
     {

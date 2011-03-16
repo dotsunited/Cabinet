@@ -24,21 +24,21 @@ class HashedSubpathFilter implements FilterInterface
      *
      * @var integer
      */
-    protected $level = 0;
+    private $level = 0;
 
     /**
      * The callback.
      *
      * @var callable
      */
-    protected $callback = 'md5';
+    private $callback = 'md5';
 
     /**
      * Whether to preserve dirs.
      *
      * @var boolean
      */
-    protected $preserveDirs = false;
+    private $preserveDirs = false;
 
     /**
      * Constructor.

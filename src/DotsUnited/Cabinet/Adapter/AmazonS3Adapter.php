@@ -32,14 +32,14 @@ class AmazonS3Adapter implements AdapterInterface
      *
      * @var \AmazonS3
      */
-    protected $amazonS3;
+    private $amazonS3;
 
     /**
      * The bucket to store file to.
      *
      * @var string
      */
-    protected $bucket;
+    private $bucket;
 
     /**
      * The storage class setting for files.
@@ -52,7 +52,7 @@ class AmazonS3Adapter implements AdapterInterface
      *
      * @var string
      */
-    protected $storageClass;
+    private $storageClass;
 
     /**
      * The ACL settings for files.
@@ -69,28 +69,28 @@ class AmazonS3Adapter implements AdapterInterface
      *
      * @var string
      */
-    protected $acl;
+    private $acl;
 
     /**
      * The expiration time for web-accessible URIs if you store private files.
      *
      * @var string|integer
      */
-    protected $uriExpirationTime = 0;
+    private $uriExpirationTime = 0;
 
     /**
      * The mime type detector.
      *
      * @var \DotsUnited\Cabinet\MimeType\Detector\DetectorInterface
      */
-    protected $mimeTypeDetector;
+    private $mimeTypeDetector;
 
     /**
      * The filename filter.
      *
      * @var \DotsUnited\Cabinet\Filter\FilterInterface
      */
-    protected $filenameFilter;
+    private $filenameFilter;
 
     /**
      * Constructor.

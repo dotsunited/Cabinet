@@ -19,7 +19,7 @@ namespace DotsUnited\Cabinet\Adapter;
  */
 class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setupAdapter()
+    private function setupAdapter()
     {
         if (!class_exists('\CFRuntime', false)) {
             if (false !== ($fp = @fopen('AWSSDKforPHP/sdk.class.php', 'r', true))) {
@@ -78,7 +78,7 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
         return $adapter;
     }
 
-    protected function getResponse(array $header = array(), $body = '', $status = 200)
+    private function getResponse(array $header = array(), $body = '', $status = 200)
     {
         return new \CFResponse($header, $body, $status);
 

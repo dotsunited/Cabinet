@@ -22,9 +22,9 @@ class AmazonS3AdapterOnlineTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \AmazonS3
      */
-    protected $amazonS3;
+    private $amazonS3;
 
-    protected function setupAdapter($invalid = false)
+    private function setupAdapter($invalid = false)
     {
         if (!class_exists('\CFRuntime', false)) {
             if (false !== ($fp = @fopen('AWSSDKforPHP/sdk.class.php', 'r', true))) {

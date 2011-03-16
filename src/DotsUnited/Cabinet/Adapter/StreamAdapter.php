@@ -28,49 +28,49 @@ class StreamAdapter implements AdapterInterface
      *
      * @var string
      */
-    protected $basePath;
+    private $basePath;
 
     /**
      * The base uri.
      *
      * @var string
      */
-    protected $baseUri;
+    private $baseUri;
 
     /**
      * The directory umask.
      *
      * @var integer
      */
-    protected $directoryUmask = 0700;
+    private $directoryUmask = 0700;
 
     /**
      * The file umask.
      *
      * @var integer
      */
-    protected $fileUmask = 0600;
+    private $fileUmask = 0600;
 
     /**
      * The stream context.
      *
      * @var array|resource
      */
-    protected $streamContext;
+    private $streamContext;
 
     /**
      * The mime type detector.
      *
      * @var \DotsUnited\Cabinet\MimeType\Detector\DetectorInterface
      */
-    protected $mimeTypeDetector;
+    private $mimeTypeDetector;
 
     /**
      * The filename filter.
      *
      * @var \DotsUnited\Cabinet\Filter\FilterInterface
      */
-    protected $filenameFilter;
+    private $filenameFilter;
 
     /**
      * Constructor.
@@ -514,7 +514,7 @@ class StreamAdapter implements AdapterInterface
      * @param string $file
      * @return string The parent directory of a file
      */
-    protected function parent($file)
+    private function parent($file)
     {
         $parent = dirname(rtrim($file, '/\\'));
 
@@ -531,7 +531,7 @@ class StreamAdapter implements AdapterInterface
      * @param string $file
      * @return string|boolean The path on success, false otherwise
      */
-    protected function makePath($file)
+    private function makePath($file)
     {
         $path     = $this->path($file);
         $dir      = $this->parent($path);
@@ -564,7 +564,7 @@ class StreamAdapter implements AdapterInterface
      * @param string $file
      * @return void
      */
-    protected function deletePath($file)
+    private function deletePath($file)
     {
         $path          = $this->path($file);
         $parent        = $this->parent($path);
