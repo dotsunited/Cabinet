@@ -62,8 +62,8 @@ class StreamAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($adapter->getBaseUri());
         $this->assertEquals(0700, $adapter->getDirectoryUmask());
         $this->assertEquals(0600, $adapter->getFileUmask());
-        $this->assertType(\PHPUnit_Framework_Constraint_IsType::TYPE_RESOURCE, $adapter->getStreamContext());
-        $this->assertType('DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector', $adapter->getMimeTypeDetector());
+        $this->assertInternalType(\PHPUnit_Framework_Constraint_IsType::TYPE_RESOURCE, $adapter->getStreamContext());
+        $this->assertInstanceOf('DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector', $adapter->getMimeTypeDetector());
         $this->assertNull($adapter->getFilenameFilter());
     }
 
@@ -91,11 +91,11 @@ class StreamAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($config['base_uri'], $adapter->getBaseUri());
         $this->assertEquals($config['directory_umask'], $adapter->getDirectoryUmask());
         $this->assertEquals($config['file_umask'], $adapter->getFileUmask());
-        $this->assertType(\PHPUnit_Framework_Constraint_IsType::TYPE_RESOURCE, $adapter->getStreamContext());
+        $this->assertInternalType(\PHPUnit_Framework_Constraint_IsType::TYPE_RESOURCE, $adapter->getStreamContext());
         $this->assertEquals($config['mime_type_detector'], $adapter->getMimeTypeDetector());
-        $this->assertType('DotsUnited\Cabinet\MimeType\Detector\DetectorInterface', $adapter->getMimeTypeDetector());
+        $this->assertInstanceOf('DotsUnited\Cabinet\MimeType\Detector\DetectorInterface', $adapter->getMimeTypeDetector());
         $this->assertEquals($config['filename_filter'], $adapter->getFilenameFilter());
-        $this->assertType('DotsUnited\Cabinet\Filter\FilterInterface', $adapter->getFilenameFilter());
+        $this->assertInstanceOf('DotsUnited\Cabinet\Filter\FilterInterface', $adapter->getFilenameFilter());
     }
 
     public function testSetBasePathTrimsTrailingSlash()

@@ -244,7 +244,7 @@ class AmazonS3AdapterOnlineTest extends \PHPUnit_Framework_TestCase
 
         $return = $adapter->stream('subdir/testStream.txt');
 
-        $this->assertType(\PHPUnit_Framework_Constraint_IsType::TYPE_RESOURCE, $return);
+        $this->assertInternalType(\PHPUnit_Framework_Constraint_IsType::TYPE_RESOURCE, $return);
     }
 
     public function testStreamFail()

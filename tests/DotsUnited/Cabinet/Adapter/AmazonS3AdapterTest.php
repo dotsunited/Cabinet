@@ -103,12 +103,12 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             'aws_secret_key' => 'bar'
         ));
 
-        $this->assertType('\AmazonS3', $adapter->getAmazonS3());
+        $this->assertInstanceOf('\AmazonS3', $adapter->getAmazonS3());
         $this->assertNull($adapter->getBucket());
         $this->assertEquals(\AmazonS3::STORAGE_STANDARD, $adapter->getStorageClass());
         $this->assertEquals(\AmazonS3::ACL_PRIVATE, $adapter->getAcl());
         $this->assertSame(0, $adapter->getUriExpirationTime());
-        $this->assertType('DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector', $adapter->getMimeTypeDetector());
+        $this->assertInstanceOf('DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector', $adapter->getMimeTypeDetector());
         $this->assertNull($adapter->getFilenameFilter());
     }
 
@@ -138,9 +138,9 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($config['acl'], $adapter->getAcl());
         $this->assertEquals($config['uri_expiration_time'], $adapter->getUriExpirationTime());
         $this->assertEquals($config['mime_type_detector'], $adapter->getMimeTypeDetector());
-        $this->assertType('DotsUnited\Cabinet\MimeType\Detector\DetectorInterface', $adapter->getMimeTypeDetector());
+        $this->assertInstanceOf('DotsUnited\Cabinet\MimeType\Detector\DetectorInterface', $adapter->getMimeTypeDetector());
         $this->assertEquals($config['filename_filter'], $adapter->getFilenameFilter());
-        $this->assertType('DotsUnited\Cabinet\Filter\FilterInterface', $adapter->getFilenameFilter());
+        $this->assertInstanceOf('DotsUnited\Cabinet\Filter\FilterInterface', $adapter->getFilenameFilter());
     }
 
     public function testConstructorCatchesAmazonS3Exception()
@@ -327,7 +327,7 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
 
         $return = $adapter->read('subdir/test.txt');
 
-        $this->assertType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING, $return);
+        $this->assertInternalType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING, $return);
     }
 
     public function testReadReturnsFalseIfResponseIsNotOk()
@@ -376,7 +376,7 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->getResponse()));
 
         $return = $adapter->stream('subdir/test.txt');
-        $this->assertType(\PHPUnit_Framework_Constraint_IsType::TYPE_RESOURCE, $return);
+        $this->assertInternalType(\PHPUnit_Framework_Constraint_IsType::TYPE_RESOURCE, $return);
     }
 
     public function testStreamReturnsFalseIfResponseIsNotOk()

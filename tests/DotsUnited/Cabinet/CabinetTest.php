@@ -23,18 +23,18 @@ class CabinetTest extends \PHPUnit_Framework_TestCase
     {
         $adapter = Cabinet::factory('DotsUnited\Cabinet\Adapter\StreamAdapter');
 
-        $this->assertType('DotsUnited\Cabinet\Adapter\AdapterInterface', $adapter);
+        $this->assertInstanceOf('DotsUnited\Cabinet\Adapter\AdapterInterface', $adapter);
         $this->assertTrue(class_exists('DotsUnited\Cabinet\Adapter\StreamAdapter'));
-        $this->assertType('DotsUnited\Cabinet\Adapter\StreamAdapter', $adapter);
+        $this->assertInstanceOf('DotsUnited\Cabinet\Adapter\StreamAdapter', $adapter);
     }
 
     public function testFactoryCustomAdapter()
     {
         $adapter = Cabinet::factory('DotsUnited\Cabinet\TestAsset\TestAdapter');
 
-        $this->assertType('DotsUnited\Cabinet\Adapter\AdapterInterface', $adapter);
+        $this->assertInstanceOf('DotsUnited\Cabinet\Adapter\AdapterInterface', $adapter);
         $this->assertTrue(class_exists('DotsUnited\Cabinet\TestAsset\TestAdapter'));
-        $this->assertType('DotsUnited\Cabinet\TestAsset\TestAdapter', $adapter);
+        $this->assertInstanceOf('DotsUnited\Cabinet\TestAsset\TestAdapter', $adapter);
     }
 
     public function testFactoryExceptionInvalidAdapter()
@@ -66,7 +66,7 @@ class CabinetTest extends \PHPUnit_Framework_TestCase
             )
         );
         $adapter = Cabinet::factory($config);
-        $this->assertType('DotsUnited\Cabinet\TestAsset\TestAdapter', $adapter);
+        $this->assertInstanceOf('DotsUnited\Cabinet\TestAsset\TestAdapter', $adapter);
         $this->assertEquals('dummy', $adapter->config['test']);
     }
 
@@ -99,7 +99,7 @@ class CabinetTest extends \PHPUnit_Framework_TestCase
         );
 
         $adapter = Cabinet::factory($config1, $config2);
-        $this->assertType('DotsUnited\Cabinet\TestAsset\TestAdapter', $adapter);
+        $this->assertInstanceOf('DotsUnited\Cabinet\TestAsset\TestAdapter', $adapter);
         // second arg should be ignored
         $this->assertEquals('dummy', $adapter->config['test']);
     }
