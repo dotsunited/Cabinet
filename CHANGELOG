@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.9.2 (2011-03-16)
+------------------
+
+  * Change all protected methods/properties to private (https://github.com/dotsunited/Cabinet/commit/ef81f3fdb3cded2c0bef3b948f0b138a2fa0cfa2)
+  * Add default autoloader (https://github.com/dotsunited/Cabinet/commit/d31b4ad539ccc374a737885e5ae84c1ffc40e72e)
+  * Fix deprecated PHPUnit methods (https://github.com/dotsunited/Cabinet/commit/cb819a33bd249b04e3149cd666a1ac3a2b2d4abc)
+
 0.9.1 (2011-03-01)
 ------------------
 

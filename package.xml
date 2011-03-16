@@ -13,10 +13,10 @@
   <email>jan.sorgalla@dotsunited.de</email>
   <active>yes</active>
  </lead>
- <date>2011-03-01</date>
+ <date>2011-03-16</date>
  <version>
-  <release>0.9.1</release>
-  <api>0.9.1</api>
+  <release>0.9.2</release>
+  <api>0.9.2</api>
  </version>
  <stability>
   <release>beta</release>
@@ -24,8 +24,9 @@
  </stability>
  <license uri="https://github.com/dotsunited/Cabinet/blob/master/LICENSE">New BSD License</license>
  <notes>
-  * Rename classes to comply with the Symfony2 conventions (https://github.com/dotsunited/Cabinet/commit/8f153b23e0948dc6ec059ad1ba50e0c892b458e7)
-  * Remove short adapter class name (https://github.com/dotsunited/Cabinet/commit/a207849706927db05f18248482bdee76003437bf)
+  * Change all protected methods/properties to private (https://github.com/dotsunited/Cabinet/commit/ef81f3fdb3cded2c0bef3b948f0b138a2fa0cfa2)
+  * Add default autoloader (https://github.com/dotsunited/Cabinet/commit/d31b4ad539ccc374a737885e5ae84c1ffc40e72e)
+  * Fix deprecated PHPUnit methods (https://github.com/dotsunited/Cabinet/commit/cb819a33bd249b04e3149cd666a1ac3a2b2d4abc)
  </notes>
  <contents>
   <dir name="/">
