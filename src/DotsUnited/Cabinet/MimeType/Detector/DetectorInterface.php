@@ -25,7 +25,7 @@ interface DetectorInterface
      * @param string $file
      * @return string
      */
-    public function detectFromFile($file);
+    function detectFromFile($file);
 
     /**
      * Detect mime type from a string.
@@ -33,7 +33,7 @@ interface DetectorInterface
      * @param string $string
      * @return string
      */
-    public function detectFromString($string);
+    function detectFromString($string);
 
     /**
      * Detect mime type from a resource.
@@ -41,5 +41,5 @@ interface DetectorInterface
      * @param resource $resource
      * @return string
      */
-    public function detectFromResource($resource);
+    function detectFromResource($resource);
 }

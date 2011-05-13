@@ -24,7 +24,7 @@ interface AdapterInterface
      *
      * @param array $config
      */
-    public function __construct(array $config = array());
+    function __construct(array $config = array());
 
     /**
      * Import a external local file.
@@ -33,7 +33,7 @@ interface AdapterInterface
      * @param string $file The name to store the file under
      * @return boolean
      */
-    public function import($external, $file);
+    function import($external, $file);
 
     /**
      * Write data to a file.
@@ -42,7 +42,7 @@ interface AdapterInterface
      * @param string|array|resource $data
      * @return boolean
      */
-    public function write($file, $data);
+    function write($file, $data);
 
     /**
      * Read data from a file.
@@ -50,7 +50,7 @@ interface AdapterInterface
      * @param string $file
      * @return string|boolean The contents or false on failure
      */
-    public function read($file);
+    function read($file);
 
     /**
      * Return a read-only stream resource for a file.
@@ -58,7 +58,7 @@ interface AdapterInterface
      * @param string $file
      * @return resource|boolean The resource or false on failure
      */
-    public function stream($file);
+    function stream($file);
 
     /**
      * Copy a file internally.
@@ -67,7 +67,7 @@ interface AdapterInterface
      * @param string $dest
      * @return boolean Whether the file was copied
      */
-    public function copy($src, $dest);
+    function copy($src, $dest);
 
     /**
      * Rename a file internally.
@@ -76,7 +76,7 @@ interface AdapterInterface
      * @param string $dest
      * @return boolean Whether the file was renamed
      */
-    public function rename($src, $dest);
+    function rename($src, $dest);
 
     /**
      * Delete a file.
@@ -84,7 +84,7 @@ interface AdapterInterface
      * @param string $file
      * @return boolean Whether the file was deleted
      */
-    public function unlink($file);
+    function unlink($file);
 
     /**
      * Return whether a file exists.
@@ -92,7 +92,7 @@ interface AdapterInterface
      * @param string $file
      * @return boolean Whether the file exists
      */
-    public function exists($file);
+    function exists($file);
 
     /**
      * Return the files size.
@@ -100,7 +100,7 @@ interface AdapterInterface
      * @param string $file
      * @return integer The file size in bytes
      */
-    public function size($file);
+    function size($file);
 
     /**
      * Try to determine and return a files MIME content type.
@@ -108,7 +108,7 @@ interface AdapterInterface
      * @param string $file
      * @return string The MIME content type
      */
-    public function type($file);
+    function type($file);
 
     /**
      * Return the web-accessible uri for the given file.
@@ -116,5 +116,5 @@ interface AdapterInterface
      * @param string $file
      * @return string The file uri
      */
-    public function uri($file);
+    function uri($file);
 }
