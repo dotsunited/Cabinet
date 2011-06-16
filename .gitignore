@@ -1,4 +1,4 @@
 nbproject
 catalog.xml
-tests/logs
+build
 phpunit.xml
