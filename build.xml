@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="name-of-project" default="build" basedir=".">
+<project name="Cabinet" default="build" basedir=".">
  <property name="source" value="src"/>
 
  <target name="clean"
