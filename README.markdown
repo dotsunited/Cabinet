@@ -16,13 +16,17 @@ Cabinet offers adapters for [PHP streams](http://php.net/stream) and [Amazon S3]
 
 You can install Cabinet via the [Dots United PEAR channel](http://pear.dotsunited.de). Run this from your command line:
 
-    pear channel-discover pear.dotsunited.de
-    pear install dotsunited/Cabinet-beta
+```
+pear channel-discover pear.dotsunited.de
+pear install dotsunited/Cabinet-beta
+```
 
 If you want to use the Amazon S3 adapter, you need to install the [AWS SDK for PHP](http://aws.amazon.com/sdkforphp/):
 
-    pear channel-discover pear.amazonwebservices.com
-    pear install aws/sdk-beta
+```
+pear channel-discover pear.amazonwebservices.com
+pear install aws/sdk-beta
+```
 
 ## Prerequisites ##
 
@@ -30,13 +34,15 @@ Cabinet needs at least PHP 5.3.0 to run and requires that you have setup autoloa
 
 Most modern frameworks have tools to setup autoloading (e.g. [Symfony2](http://symfony.com/doc/2.0/cookbook/tools/autoloader.html)), if you are unsure you can use the following code snippet in your bootstrap file:
 
-    <?php
-    spl_autoload_register(function($className) {
-        if (strpos($className, 'DotsUnited\\Cabinet\\') === 0) {
-            require str_replace('\\', DIRECTORY_SEPARATOR, $className) . '.php';
-        }
-    });
-    ?>
+```php
+<?php
+spl_autoload_register(function($className) {
+    if (strpos($className, 'DotsUnited\\Cabinet\\') === 0) {
+        require str_replace('\\', DIRECTORY_SEPARATOR, $className) . '.php';
+    }
+});
+?>
+```
 
 This requires that you have installed Cabinet in your `include_path` which is already the case if you have installed it via PEAR.
 
@@ -48,12 +54,14 @@ Instances of Cabinet adapters can be either created directly or using the static
 
 You can create an instance of an adapter using its constructor. An adapter constructor takes one argument, which is an array of configuration parameters.
 
-    <?php
-    $adapter = new \DotsUnited\Cabinet\Adapter\StreamAdapter(array(
-        'base_path' => '/my/base/path',
-        'base_uri'  => 'http://static.example.com'
-    ));
-    ?>
+```php
+<?php
+$adapter = new \DotsUnited\Cabinet\Adapter\StreamAdapter(array(
+    'base_path' => '/my/base/path',
+    'base_uri'  => 'http://static.example.com'
+));
+?>
+```
 
 ### Using the Cabinet factory ###
 
@@ -61,83 +69,109 @@ As an alternative to using an adapter constructor directly, you can create an in
 
 The first argument is a string that names the adapter class (for example '\DotsUnited\Cabinet\Adapter\StreamAdapter'). The second argument is the same array of parameters you would have given to the adapter constructor.
 
-    <?php
-    $adapter = \DotsUnited\Cabinet\Cabinet::factory('\DotsUnited\Cabinet\Adapter\StreamAdapter', array(
-        'base_path' => '/my/base/path',
-        'base_uri'  => 'http://static.example.com'
-    ));
-    ?>
+```php
+<?php
+$adapter = \DotsUnited\Cabinet\Cabinet::factory('\DotsUnited\Cabinet\Adapter\StreamAdapter', array(
+    'base_path' => '/my/base/path',
+    'base_uri'  => 'http://static.example.com'
+));
+?>
+```
 
 Alternatively, the first argument can be an associative array. The adapter class is then read from the 'adapter' key. Optionally, it can contain a 'config' key holding the configuration parameters. In this case, the second argument will be ignored.
 
-    <?php
-    $adapter = \DotsUnited\Cabinet\Cabinet::factory(array(
-        'adapter' => '\DotsUnited\Cabinet\Adapter\StreamAdapter',
-        'config' => array(
-            'base_path' => '/my/base/path',
-            'base_uri'  => 'http://static.example.com'
-        )
-    ));
-    ?>
+```php
+<?php
+$adapter = \DotsUnited\Cabinet\Cabinet::factory(array(
+    'adapter' => '\DotsUnited\Cabinet\Adapter\StreamAdapter',
+    'config' => array(
+        'base_path' => '/my/base/path',
+        'base_uri'  => 'http://static.example.com'
+    )
+));
+?>
+```
 
 ### Managing files ###
 
 Once you created the adapter, you can store, retrieve and get informations about files with the following methods:
 
 #### Import a external local file: ####
-    <?php
-    $adapter->import($external, $file);
-    ?>
+```php
+<?php
+$adapter->import($external, $file);
+?>
+```
 
 #### Write data to a file: ####
-    <?php
-    $adapter->write($file, $data);
-    ?>
+```php
+<?php
+$adapter->write($file, $data);
+?>
+```
 
 #### Read data from a file: ####
-    <?php
-    $adapter->read($file);
-    ?>
+```php
+<?php
+$adapter->read($file);
+?>
+```
 
 #### Get a read-only stream resource for a file: ####
-    <?php
-    $adapter->stream($file);
-    ?>
+```php
+<?php
+$adapter->stream($file);
+?>
+```
 
 #### Copy a file internally: ####
-    <?php
-    $adapter->copy($src, $dest);
-    ?>
+```php
+<?php
+$adapter->copy($src, $dest);
+?>
+```
 
 #### Rename a file internally: ####
-    <?php
-    $adapter->rename($src, $dest);
-    ?>
+```php
+<?php
+$adapter->rename($src, $dest);
+?>
+```
 
 #### Delete a file: ####
-    <?php
-    $adapter->unlink($file);
-    ?>
+```php
+<?php
+$adapter->unlink($file);
+?>
+```
 
 #### Check whether a file exists: ####
-    <?php
-    $adapter->exists($file);
-    ?>
+```php
+<?php
+$adapter->exists($file);
+?>
+```
 
 #### Get a files size: ####
-    <?php
-    $adapter->size($file);
-    ?>
+```php
+<?php
+$adapter->size($file);
+?>
+```
 
 #### Get a files MIME content type: ####
-    <?php
-    $adapter->type($file);
-    ?>
+```php
+<?php
+$adapter->type($file);
+?>
+```
 
 #### Get the web-accessible uri for the given file: ####
-    <?php
-    $adapter->uri($file);
-    ?>
+```php
+<?php
+$adapter->uri($file);
+?>
+```
 
 ## Adapters ##
 
@@ -194,20 +228,24 @@ You can manipulate the filename you pass to each method of an adapter with filte
 
 You can add filters like this:
 
-    <?php
-    $adapter->setFilenameFilter(new MyFilenameFilter());
-    ?>
+```php
+<?php
+$adapter->setFilenameFilter(new MyFilenameFilter());
+?>
+```
 
 If you need multiple filters, you can use `DotsUnited\Cabinet\Filter\FilterChain` like this:
 
-    <?php
-    $filterChain = new \DotsUnited\Cabinet\Filter\FilterChain();
+```php
+<?php
+$filterChain = new \DotsUnited\Cabinet\Filter\FilterChain();
 
-    $filterChain->addFilter(new MyFilenameFilter1());
-    $filterChain->addFilter(new MyFilenameFilter2());
+$filterChain->addFilter(new MyFilenameFilter1());
+$filterChain->addFilter(new MyFilenameFilter2());
 
-    $adapter->setFilenameFilter($filterChain);
-    ?>
+$adapter->setFilenameFilter($filterChain);
+?>
+```
 
 ### Examples ###
 
@@ -217,13 +255,15 @@ This spreads the files over subdirectories to ensure performance by avoiding to 
 
 Simply register the `DotsUnited\Cabinet\Filter\HashedSubpathFilter` filter with the adapter:
 
-    <?php
-    $config = array(
-        'level' => 4
-    );
+```php
+<?php
+$config = array(
+    'level' => 4
+);
 
-    $adapter->setFilenameFilter(new \DotsUnited\Cabinet\Filter\HashedSubpathFilter($config);
-    ?>
+$adapter->setFilenameFilter(new \DotsUnited\Cabinet\Filter\HashedSubpathFilter($config);
+?>
+```
 
 ## License ##
 
