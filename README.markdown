@@ -1,6 +1,8 @@
 Cabinet
 =======
 
+[![Build Status](https://secure.travis-ci.org/dotsunited/Cabinet.png)](http://travis-ci.org/dotsunited/Cabinet)
+
 Cabinet is a PHP 5.3+ library providing a simple file storage layer.
 
 It provides a unified API for storing and retrieving files as well as getting basic informations like size and content type of a file.
