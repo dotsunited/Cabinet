@@ -9,26 +9,6 @@
  * file that was distributed with this source code.
  */
 
-// Setup PHPUnit autoloading from include_path
-spl_autoload_register(function($className) {
-    if (strpos($className, 'PHPUnit_') === 0) {
-        require str_replace('_', '/', $className) . '.php';
-    }
-});
-
-// Setup Cabinet test asset autoloading
-spl_autoload_register(function($className) {
-    if (strpos($className, 'DotsUnited\\Cabinet\\') === 0) {
-        $file = __DIR__ . '/' . str_replace('\\', '/', $className) . '.php';
-
-        if (file_exists($file)) {
-            require $file;
-        }
-    }
-});
-
-if (file_exists($file = __DIR__.'/../autoload.php')) {
-    require_once $file;
-} elseif (file_exists($file = __DIR__.'/../autoload.php.dist')) {
-    require_once $file;
-}
+require __DIR__.'/../vendor/sdk/sdk.class.php';
+$loader = require __DIR__.'/../vendor/.composer/autoload.php';
+$loader->add('DotsUnited\\Cabinet', __DIR__);

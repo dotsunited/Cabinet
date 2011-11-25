@@ -1,0 +1,31 @@
+{
+    "name": "dotsunited/cabinet",
+    "type": "library",
+    "description": "Cabinet is a PHP 5.3+ library providing a simple file storage layer",
+    "keywords": ["file", "storage", "amazon", "s3"],
+    "homepage": "https://github.com/dotsunited/Cabinet",
+    "license": "New BSD",
+    "authors": [
+        {
+            "name": "Jan Sorgalla",
+            "email": "jan.sorgalla@dotsunited.de",
+            "homepage": "http://dotsunited.de"
+        }
+    ],
+    "repositories": {
+        "pear.amazonwebservices.com": {
+            "pear": {
+                "url": "http://pear.amazonwebservices.com"
+            }
+        }
+    },
+    "require": {
+        "php": ">=5.3.0",
+        "sdk": "1.2.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "DotsUnited\\Cabinet": "src/"
+        }
+    }
+}
