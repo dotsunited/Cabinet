@@ -1,7 +1,7 @@
 Cabinet
 =======
 
-[![Build Status](https://secure.travis-ci.org/dotsunited/Cabinet.png)](http://travis-ci.org/dotsunited/Cabinet)
+[![Build Status](https://secure.travis-ci.org/dotsunited/Cabinet.png?branch=master)](http://travis-ci.org/dotsunited/Cabinet)
 
 Cabinet is a PHP 5.3+ library providing a simple file storage layer.
 
