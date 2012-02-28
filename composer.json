@@ -4,7 +4,7 @@
     "description": "Cabinet is a PHP 5.3+ library providing a simple file storage layer",
     "keywords": ["file", "storage", "amazon", "s3"],
     "homepage": "https://github.com/dotsunited/Cabinet",
-    "version": "0.9.3",
+    "version": "0.9.4",
     "license": "New BSD",
     "authors": [
         {
