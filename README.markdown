@@ -14,41 +14,26 @@ This is useful if
 
 Cabinet offers adapters for [PHP streams](http://php.net/stream) and [Amazon S3](https://s3.amazonaws.com) out of the box. But you can easily write your own adapters by implementing `DotsUnited\Cabinet\Adapter\AdapterInterface`.
 
-## Installation ##
+Installation
+------------
 
-You can install Cabinet via the [Dots United PEAR channel](http://pear.dotsunited.de). Run this from your command line:
+Cabinet can be installed using the [Composer](http://packagist.org) tool. You can either add `dotsunited/cabinet` to your dependencies in composer.json, or if you want to install Cabinet as standalone, go to the main directory and run:
 
-```
-pear channel-discover pear.dotsunited.de
-pear install dotsunited/Cabinet-beta
-```
-
-If you want to use the Amazon S3 adapter, you need to install the [AWS SDK for PHP](http://aws.amazon.com/sdkforphp/):
-
-```
-pear channel-discover pear.amazonwebservices.com
-pear install aws/sdk-beta
+```bash
+$ wget http://getcomposer.org/composer.phar 
+$ php composer.phar install
 ```
 
-## Prerequisites ##
-
-Cabinet needs at least PHP 5.3.0 to run and requires that you have setup autoloading (Cabinet follows the technical interoperability [standards](http://groups.google.com/group/php-standards/web/psr-0-final-proposal) for PHP 5.3 namespaces and class names).
-
-Most modern frameworks have tools to setup autoloading (e.g. [Symfony2](http://symfony.com/doc/2.0/cookbook/tools/autoloader.html)), if you are unsure you can use the following code snippet in your bootstrap file:
+You can then use the composer-generated autoloader to access the Cabinet classes:
 
 ```php
 <?php
-spl_autoload_register(function($className) {
-    if (strpos($className, 'DotsUnited\\Cabinet\\') === 0) {
-        require str_replace('\\', DIRECTORY_SEPARATOR, $className) . '.php';
-    }
-});
+require 'vendor/.composer/autoload.php';
 ?>
 ```
 
-This requires that you have installed Cabinet in your `include_path` which is already the case if you have installed it via PEAR.
-
-## Usage ##
+Usage
+-----
 
 Instances of Cabinet adapters can be either created directly or using the static `DotsUnited\Cabinet\Cabinet::factory()` method.
 
@@ -175,7 +160,8 @@ $adapter->uri($file);
 ?>
 ```
 
-## Adapters ##
+Adapters
+--------
 
 Cabinet offers two adapters:
 
@@ -224,7 +210,8 @@ Configuration parameters for `DotsUnited\Cabinet\Adapter\AmazonS3Adapter`:
   * `filename_filter`:
     An instance of `DotsUnited\Cabinet\Filter\FilterInterface`. Filename filters are explained in the next section.
 
-## Filename filters ##
+Filename filters
+----------------
 
 You can manipulate the filename you pass to each method of an adapter with filters. Filters are classes which implement `DotsUnited\Cabinet\Filter\FilterInterface`.
 
@@ -267,6 +254,7 @@ $adapter->setFilenameFilter(new \DotsUnited\Cabinet\Filter\HashedSubpathFilter($
 ?>
 ```
 
-## License ##
+License
+-------
 
 Cabinet is released under the [New BSD License](https://github.com/dotsunited/Cabinet/blob/master/LICENSE).
