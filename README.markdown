@@ -17,7 +17,7 @@ Cabinet offers adapters for [PHP streams](http://php.net/stream) and [Amazon S3]
 Installation
 ------------
 
-Cabinet can be installed using the [Composer](http://packagist.org) tool. You can either add `dotsunited/cabinet` to your dependencies in composer.json, or if you want to install Cabinet as standalone, go to the main directory and run:
+Cabinet can be installed using the [Composer](http://packagist.org) tool. You can either add `dotsunited/cabinet` to the dependencies in your composer.json, or if you want to install Cabinet as standalone, go to the main directory and run:
 
 ```bash
 $ wget http://getcomposer.org/composer.phar 
