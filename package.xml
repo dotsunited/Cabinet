@@ -13,10 +13,10 @@
   <email>jan.sorgalla@dotsunited.de</email>
   <active>yes</active>
  </lead>
- <date>2011-03-16</date>
+ <date>2012-02-28</date>
  <version>
-  <release>0.9.2</release>
-  <api>0.9.2</api>
+  <release>0.9.3</release>
+  <api>0.9.3</api>
  </version>
  <stability>
   <release>beta</release>
@@ -24,9 +24,7 @@
  </stability>
  <license uri="https://github.com/dotsunited/Cabinet/blob/master/LICENSE">New BSD License</license>
  <notes>
-  * Change all protected methods/properties to private (https://github.com/dotsunited/Cabinet/commit/ef81f3fdb3cded2c0bef3b948f0b138a2fa0cfa2)
-  * Add default autoloader (https://github.com/dotsunited/Cabinet/commit/d31b4ad539ccc374a737885e5ae84c1ffc40e72e)
-  * Fix deprecated PHPUnit methods (https://github.com/dotsunited/Cabinet/commit/cb819a33bd249b04e3149cd666a1ac3a2b2d4abc)
+  * Make compatible with latest version 1.5.3 of aws/sdk (https://github.com/dotsunited/Cabinet/commit/d6a47ba7385bd61f40b2951e40d78544970d715d)
  </notes>
  <contents>
   <dir name="/">
@@ -100,7 +98,7 @@
    <package>
     <name>sdk</name>
     <channel>pear.amazonwebservices.com</channel>
-    <min>1.2.0</min>
+    <min>1.5.3</min>
    </package>
   </optional>
  </dependencies>

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.9.3 (2012-02-28)
+------------------
+
+  * Make compatible with latest version 1.5.3 of aws/sdk (https://github.com/dotsunited/Cabinet/commit/d6a47ba7385bd61f40b2951e40d78544970d715d)
+
 0.9.2 (2011-03-16)
 ------------------
 
