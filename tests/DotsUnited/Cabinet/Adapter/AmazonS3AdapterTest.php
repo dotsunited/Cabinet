@@ -22,13 +22,6 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
     private function setupAdapter()
     {
         if (!class_exists('\CFRuntime', false)) {
-            if (false !== ($fp = @fopen('AWSSDKforPHP/sdk.class.php', 'r', true))) {
-                @fclose($fp);
-                require_once 'AWSSDKforPHP/sdk.class.php';
-            }
-        }
-
-        if (!class_exists('\CFRuntime', false)) {
             $this->markTestSkipped(
                 'AWS SDK for PHP is not available. See: http://aws.amazon.com/sdkforphp/'
             );
@@ -145,14 +138,7 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructorCatchesAmazonS3Exception()
     {
-        if (defined('AWS_KEY')) {
-            $this->markTestSkipped(
-                'AWS_KEY is defined'
-            );
-            return;
-        }
-
-        $this->setExpectedException('\RuntimeException', 'Exception thrown by \AmazonS3: No account key was passed into the constructor, nor was it set in the AWS_KEY constant.');
+        $this->setExpectedException('\RuntimeException', 'No credentials were provided to AmazonS3.');
 
         $config = array(
             'aws_key'        => null,
@@ -164,13 +150,6 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructorPassesAmazonS3ConfigAsArrayToInstance()
     {
-        if (defined('AWS_KEY')) {
-            $this->markTestSkipped(
-                'AWS_KEY is defined'
-            );
-            return;
-        }
-
         $config = array(
             'aws_key'        => 'foo',
             'aws_secret_key' => 'bar',

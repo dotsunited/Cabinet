@@ -15,10 +15,6 @@ use DotsUnited\Cabinet\Filter\FilterInterface;
 use DotsUnited\Cabinet\MimeType\Detector\DetectorInterface;
 use DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector;
 
-if (!class_exists('\CFRuntime', false)) {
-    include_once 'AWSSDKforPHP/sdk.class.php';
-}
-
 /**
  * DotsUnited\Cabinet\Adapter\AmazonS3Adapter
  *
@@ -100,30 +96,43 @@ class AmazonS3Adapter implements AdapterInterface
      */
     public function __construct(array $config = array())
     {
-        // AmazonS3 allows to define AWS_KEY and AWS_SECRET_KEY constants
-        if (!isset($config['aws_key'])) {
-            $config['aws_key'] = null;
-        }
-
-        if (!isset($config['aws_secret_key'])) {
-            $config['aws_secret_key'] = null;
-        }
-
         try {
             if (isset($config['amazon_s3'])) {
                 if (is_array($config['amazon_s3'])) {
-                    $this->amazonS3 = new \AmazonS3($config['aws_key'], $config['aws_secret_key']);
+                    $options = $config['amazon_s3'];
+
+                    if (isset($config['aws_key'])) {
+                        $options['key'] = $config['aws_key'];
+                    }
+
+                    if (isset($config['aws_secret_key'])) {
+                        $options['secret'] = $config['aws_secret_key'];
+                    }
+
+                    $this->amazonS3 = new \AmazonS3($options);
 
                     foreach ($config['amazon_s3'] as $key => $val) {
-                        $this->amazonS3->$key = $val;
+                        if (property_exists($this->amazonS3, $key)) {
+                            $this->amazonS3->$key = $val;
+                        }
                     }
                 } else {
                     $this->setAmazonS3($config['amazon_s3']);
                 }
             } else {
-                $this->amazonS3 = new \AmazonS3($config['aws_key'], $config['aws_secret_key']);
+                $options = array();
+
+                if (isset($config['aws_key'])) {
+                    $options['key'] = $config['aws_key'];
+                }
+
+                if (isset($config['aws_secret_key'])) {
+                    $options['secret'] = $config['aws_secret_key'];
+                }
+
+                $this->amazonS3 = new \AmazonS3($options);
             }
-        } catch (\S3_Exception $e) {
+        } catch (\CFCredentials_Exception $e) {
             throw new \RuntimeException('Exception thrown by \AmazonS3: ' . $e->getMessage(), null, $e);
         }
 

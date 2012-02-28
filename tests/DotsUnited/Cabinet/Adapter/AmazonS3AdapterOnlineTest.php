@@ -27,13 +27,6 @@ class AmazonS3AdapterOnlineTest extends \PHPUnit_Framework_TestCase
     private function setupAdapter($invalid = false)
     {
         if (!class_exists('\CFRuntime', false)) {
-            if (false !== ($fp = @fopen('AWSSDKforPHP/sdk.class.php', 'r', true))) {
-                @fclose($fp);
-                require_once 'AWSSDKforPHP/sdk.class.php';
-            }
-        }
-
-        if (!class_exists('\CFRuntime', false)) {
             $this->markTestSkipped(
                 'AWS SDK for PHP is not available. See: http://aws.amazon.com/sdkforphp/'
             );
@@ -41,25 +34,35 @@ class AmazonS3AdapterOnlineTest extends \PHPUnit_Framework_TestCase
             return false;
         }
 
+        $bucket = constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_BUCKET_NAME');
+
         if ($invalid) {
-            $amazonS3 = new \AmazonS3('foo', 'bar');
+            $amazonS3 = new \AmazonS3(array('key' => 'foo', 'secret' => 'bar', 'certificate_authority' => true));
         } else {
             $key = constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_AWS_KEY');
             $secret = constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_AWS_SECRET_KEY');
-            $this->amazonS3 = $amazonS3 = new \AmazonS3($key, $secret);
-        }
+            $this->amazonS3 = $amazonS3 = new \AmazonS3(array('key' => $key, 'secret' => $secret, 'certificate_authority' => true));
 
-        $bucket = constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_BUCKET_NAME');
+            // From the SDK examples
+            if (!$amazonS3->if_bucket_exists($bucket)) {
+                $region = constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_BUCKET_REGION');
 
-        // From the SDK examples
-        if (!$amazonS3->if_bucket_exists($bucket)) {
-            $response = $amazonS3->create_bucket($bucket, constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_BUCKET_REGION'));
+                if (!$region) {
+                    $region = \AmazonS3::REGION_US_E1;
+                }
 
-            if ($response->isOK()) {
-                $exists = $amazonS3->if_bucket_exists($bucket);
-                while (!$exists) {
-                    sleep(1);
+                $response = $amazonS3->create_bucket($bucket, $region);
+
+                if ($response->isOK()) {
                     $exists = $amazonS3->if_bucket_exists($bucket);
+                    while (!$exists) {
+                        sleep(1);
+                        $exists = $amazonS3->if_bucket_exists($bucket);
+                    }
+                }
+            } else {
+                if ($amazonS3->get_bucket_object_count($bucket) > 0) {
+                    $amazonS3->delete_all_objects($bucket);
                 }
             }
         }
@@ -97,13 +100,6 @@ class AmazonS3AdapterOnlineTest extends \PHPUnit_Framework_TestCase
     {
         if (!constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_ENABLED') || constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_ENABLED') != 'true') {
             $this->markTestSkipped('DotsUnited\Cabinet\Adapter\AmazonS3 online tests are not enabled');
-        }
-    }
-
-    public function tearDown()
-    {
-        if ($this->amazonS3) {
-            $this->amazonS3->delete_all_objects(constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_BUCKET_NAME'));
         }
     }
 
