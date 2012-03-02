@@ -20,8 +20,10 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0",
-        "pear-aws/sdk": "1.5.3"
+        "php": ">=5.3.0"
+    },
+    "recommend": {
+        "pear-aws/sdk": ">=1.5.3"
     },
     "autoload": {
         "psr-0": {
