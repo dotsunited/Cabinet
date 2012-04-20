@@ -22,7 +22,10 @@
     "require": {
         "php": ">=5.3.0"
     },
-    "recommend": {
+    "require-dev": {
+        "pear-aws/sdk": ">=1.5.3"
+    },
+    "suggest": {
         "pear-aws/sdk": ">=1.5.3"
     },
     "autoload": {
