@@ -28,7 +28,7 @@ You can then use the composer-generated autoloader to access the Cabinet classes
 
 ```php
 <?php
-require 'vendor/.composer/autoload.php';
+require 'vendor/autoload.php';
 ?>
 ```
 
