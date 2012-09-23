@@ -32,7 +32,7 @@ class FileinfoDetectorTest extends \PHPUnit_Framework_TestCase
             );
         }
 
-        $this->detector = new FileinfoDetector(__DIR__ . '/_files/magic');
+        $this->detector = new FileinfoDetector();
     }
 
     public function tearDown()
