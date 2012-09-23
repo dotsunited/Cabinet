@@ -21,16 +21,9 @@ class StreamAdapterTest extends \PHPUnit_Framework_TestCase
 {
     private function setupAdapter()
     {
-        if (!class_exists('\vfsStream', false)) {
-            if (false !== ($fp = @fopen('vfsStream/vfsStream.php', 'r', true))) {
-                @fclose($fp);
-                require_once 'vfsStream/vfsStream.php';
-            }
-        }
-
-        if (!class_exists('\vfsStream', false)) {
+        if (!class_exists('org\bovigo\vfs\vfsStream')) {
             $this->markTestSkipped(
-                'vfsStream is not available. See: http://code.google.com/p/bovigo/wiki/vfsStreamDocsInstall'
+                'vfsStream is not available. Install dev requirements with "php composer.phar install --dev".'
             );
 
             return false;
@@ -44,9 +37,9 @@ class StreamAdapterTest extends \PHPUnit_Framework_TestCase
             ->method('detectFromFile')
             ->will($this->returnValue('text/plain'));
 
-        \vfsStream::setup('StreamTest');
+        \org\bovigo\vfs\vfsStream::setup('StreamTest');
         $adapter = new StreamAdapter();
-        $adapter->setBasePath(\vfsStream::url('StreamTest'));
+        $adapter->setBasePath(\org\bovigo\vfs\vfsStream::url('StreamTest'));
         $adapter->setMimeTypeDetector($mimeTypeDetector);
 
         return $adapter;
@@ -172,7 +165,7 @@ class StreamAdapterTest extends \PHPUnit_Framework_TestCase
 
         $return = $adapter->import(__DIR__ . '/_files/test.txt', 'subdir/test.txt');
 
-        $vfsRoot = \vfsStreamWrapper::getRoot();
+        $vfsRoot = \org\bovigo\vfs\vfsStreamWrapper::getRoot();
 
         $this->assertTrue($return);
         $this->assertTrue($vfsRoot->hasChild('subdir/test.txt'));
@@ -186,7 +179,7 @@ class StreamAdapterTest extends \PHPUnit_Framework_TestCase
 
         $return = $adapter->write('subdir/test.txt', 'somedata');
 
-        $vfsRoot = \vfsStreamWrapper::getRoot();
+        $vfsRoot = \org\bovigo\vfs\vfsStreamWrapper::getRoot();
 
         $this->assertTrue($return);
         $this->assertTrue($vfsRoot->hasChild('subdir/test.txt'));
@@ -201,7 +194,7 @@ class StreamAdapterTest extends \PHPUnit_Framework_TestCase
 
         $return = $adapter->write('subdir/test.txt', fopen(__DIR__ . '/_files/test.txt', 'r'));
 
-        $vfsRoot = \vfsStreamWrapper::getRoot();
+        $vfsRoot = \org\bovigo\vfs\vfsStreamWrapper::getRoot();
 
         $this->assertTrue($return);
         $this->assertTrue($vfsRoot->hasChild('subdir/test.txt'));
@@ -216,7 +209,7 @@ class StreamAdapterTest extends \PHPUnit_Framework_TestCase
 
         $return = $adapter->write('subdir/test.txt', array('s', 'o', 'm', 'e', 'd', 'a', 't', 'a'));
 
-        $vfsRoot = \vfsStreamWrapper::getRoot();
+        $vfsRoot = \org\bovigo\vfs\vfsStreamWrapper::getRoot();
 
         $this->assertTrue($return);
         $this->assertTrue($vfsRoot->hasChild('subdir/test.txt'));
@@ -259,7 +252,7 @@ class StreamAdapterTest extends \PHPUnit_Framework_TestCase
 
         $return = $adapter->copy('subdir/test.txt', 'subdir/test_copy.txt');
 
-        $vfsRoot = \vfsStreamWrapper::getRoot();
+        $vfsRoot = \org\bovigo\vfs\vfsStreamWrapper::getRoot();
 
         $this->assertTrue($return);
         $this->assertTrue($vfsRoot->hasChild('subdir/test_copy.txt'));
@@ -278,7 +271,7 @@ class StreamAdapterTest extends \PHPUnit_Framework_TestCase
 
         $return = $adapter->rename('subdir/test.txt', 'subdir_rename/test_rename.txt');
 
-        $vfsRoot = \vfsStreamWrapper::getRoot();
+        $vfsRoot = \org\bovigo\vfs\vfsStreamWrapper::getRoot();
 
         $this->assertTrue($return);
         $this->assertTrue($vfsRoot->hasChild('subdir_rename/test_rename.txt'));
@@ -293,7 +286,7 @@ class StreamAdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $vfsRoot = \vfsStreamWrapper::getRoot();
+        $vfsRoot = \org\bovigo\vfs\vfsStreamWrapper::getRoot();
 
         $return = $adapter->unlink('subdir/test.txt');
 

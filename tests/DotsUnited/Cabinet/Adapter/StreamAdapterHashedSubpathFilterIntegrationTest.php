@@ -24,16 +24,9 @@ class StreamAdapterHashedSubpathFilterIntegrationTest extends \PHPUnit_Framework
 {
     private function setupAdapter()
     {
-        if (!class_exists('\vfsStream', false)) {
-            if (false !== ($fp = @fopen('vfsStream/vfsStream.php', 'r', true))) {
-                @fclose($fp);
-                require_once 'vfsStream/vfsStream.php';
-            }
-        }
-
-        if (!class_exists('\vfsStream', false)) {
+        if (!class_exists('org\bovigo\vfs\vfsStream')) {
             $this->markTestSkipped(
-                'vfsStream is not available. See: http://code.google.com/p/bovigo/wiki/vfsStreamDocsInstall'
+                'vfsStream is not available. Install dev requirements with "php composer.phar install --dev".'
             );
 
             return false;
@@ -44,9 +37,9 @@ class StreamAdapterHashedSubpathFilterIntegrationTest extends \PHPUnit_Framework
             ->setLevel(4)
             ->setPreserveDirs(true);
 
-        \vfsStream::setup('StreamHashedSubpathIntegrationTest');
+        \org\bovigo\vfs\vfsStream::setup('StreamHashedSubpathIntegrationTest');
         $adapter = new StreamAdapter();
-        $adapter->setBasePath(\vfsStream::url('StreamHashedSubpathIntegrationTest'));
+        $adapter->setBasePath(\org\bovigo\vfs\vfsStream::url('StreamHashedSubpathIntegrationTest'));
         $adapter->setFilenameFilter($filter);
 
         return $adapter;
@@ -62,7 +55,7 @@ class StreamAdapterHashedSubpathFilterIntegrationTest extends \PHPUnit_Framework
 
         $return = $adapter->import(__DIR__ . '/_files/test.txt', 'subdir/test.txt');
 
-        $vfsRoot = \vfsStreamWrapper::getRoot();
+        $vfsRoot = \org\bovigo\vfs\vfsStreamWrapper::getRoot();
 
         $this->assertTrue($vfsRoot->hasChild('subdir/d/d/1/8/test.txt'));
     }
@@ -75,7 +68,7 @@ class StreamAdapterHashedSubpathFilterIntegrationTest extends \PHPUnit_Framework
 
         $return = $adapter->write('subdir/test.txt', 'somedata');
 
-        $vfsRoot = \vfsStreamWrapper::getRoot();
+        $vfsRoot = \org\bovigo\vfs\vfsStreamWrapper::getRoot();
 
         $this->assertTrue($return);
         $this->assertTrue($vfsRoot->hasChild('subdir/d/d/1/8/test.txt'));
@@ -90,7 +83,7 @@ class StreamAdapterHashedSubpathFilterIntegrationTest extends \PHPUnit_Framework
 
         $return = $adapter->write('subdir/test.txt', fopen(__DIR__ . '/_files/test.txt', 'r'));
 
-        $vfsRoot = \vfsStreamWrapper::getRoot();
+        $vfsRoot = \org\bovigo\vfs\vfsStreamWrapper::getRoot();
 
         $this->assertTrue($return);
         $this->assertTrue($vfsRoot->hasChild('subdir/d/d/1/8/test.txt'));
@@ -105,7 +98,7 @@ class StreamAdapterHashedSubpathFilterIntegrationTest extends \PHPUnit_Framework
 
         $return = $adapter->write('subdir/test.txt', array('s', 'o', 'm', 'e', 'd', 'a', 't', 'a'));
 
-        $vfsRoot = \vfsStreamWrapper::getRoot();
+        $vfsRoot = \org\bovigo\vfs\vfsStreamWrapper::getRoot();
 
         $this->assertTrue($return);
         $this->assertTrue($vfsRoot->hasChild('subdir/d/d/1/8/test.txt'));
@@ -148,7 +141,7 @@ class StreamAdapterHashedSubpathFilterIntegrationTest extends \PHPUnit_Framework
 
         $return = $adapter->copy('subdir/test.txt', 'subdir/test_copy.txt');
 
-        $vfsRoot = \vfsStreamWrapper::getRoot();
+        $vfsRoot = \org\bovigo\vfs\vfsStreamWrapper::getRoot();
 
         $this->assertTrue($return);
         $this->assertTrue($vfsRoot->hasChild('subdir/d/8/3/d/test_copy.txt'));
@@ -167,7 +160,7 @@ class StreamAdapterHashedSubpathFilterIntegrationTest extends \PHPUnit_Framework
 
         $return = $adapter->rename('subdir/test.txt', 'subdir_rename/test_rename.txt');
 
-        $vfsRoot = \vfsStreamWrapper::getRoot();
+        $vfsRoot = \org\bovigo\vfs\vfsStreamWrapper::getRoot();
 
         $this->assertTrue($return);
 
@@ -183,7 +176,7 @@ class StreamAdapterHashedSubpathFilterIntegrationTest extends \PHPUnit_Framework
             return;
         }
 
-        $vfsRoot = \vfsStreamWrapper::getRoot();
+        $vfsRoot = \org\bovigo\vfs\vfsStreamWrapper::getRoot();
 
         $return = $adapter->unlink('subdir/test.txt');
 

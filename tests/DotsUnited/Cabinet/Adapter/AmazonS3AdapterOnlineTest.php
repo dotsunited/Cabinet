@@ -26,9 +26,9 @@ class AmazonS3AdapterOnlineTest extends \PHPUnit_Framework_TestCase
 
     private function setupAdapter($invalid = false)
     {
-        if (!class_exists('\CFRuntime', false)) {
+        if (!class_exists('\CFRuntime')) {
             $this->markTestSkipped(
-                'AWS SDK for PHP is not available. See: http://aws.amazon.com/sdkforphp/'
+                'AWS SDK for PHP is not available. Install dev requirements with "php composer.phar install --dev".'
             );
 
             return false;
