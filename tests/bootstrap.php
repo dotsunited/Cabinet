@@ -9,6 +9,5 @@
  * file that was distributed with this source code.
  */
 
-require __DIR__.'/../vendor/pear-aws/sdk/sdk.class.php';
 $loader = require __DIR__.'/../vendor/autoload.php';
 $loader->add('DotsUnited\\Cabinet', __DIR__);
