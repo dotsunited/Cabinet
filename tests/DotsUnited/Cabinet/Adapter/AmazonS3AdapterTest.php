@@ -138,7 +138,7 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructorCatchesAmazonS3Exception()
     {
-        $this->setExpectedException('\RuntimeException', 'No credentials were provided to AmazonS3.');
+        $this->setExpectedException('\RuntimeException');
 
         $config = array(
             'aws_key'        => null,
