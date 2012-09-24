@@ -56,31 +56,33 @@ class FileinfoDetector implements DetectorInterface
     /**
      * Detect mime type from a file.
      *
-     * @param string $file
+     * @param  string $file
      * @return string
      */
     public function detectFromFile($file)
     {
         $type = finfo_file($this->getHandle(), $file);
+
         return $this->fixType($type);
     }
 
     /**
      * Detect mime type from a string.
      *
-     * @param string $string
+     * @param  string $string
      * @return string
      */
     public function detectFromString($string)
     {
         $type = finfo_buffer($this->getHandle(), $string);
+
         return $this->fixType($type);
     }
 
     /**
      * Detect mime type from a resource.
      *
-     * @param resource $resource
+     * @param  resource $resource
      * @return string
      */
     public function detectFromResource($resource)
@@ -118,7 +120,7 @@ class FileinfoDetector implements DetectorInterface
     /**
      * Fix mime type returned by finfo.
      *
-     * @param string $type
+     * @param  string      $type
      * @return string|null
      */
     private function fixType($type)

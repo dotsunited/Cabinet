@@ -91,7 +91,7 @@ class AmazonS3Adapter implements AdapterInterface
     /**
      * Constructor.
      *
-     * @param array $config
+     * @param  array             $config
      * @throws \RuntimeException
      */
     public function __construct(array $config = array())
@@ -170,6 +170,7 @@ class AmazonS3Adapter implements AdapterInterface
     public function setAmazonS3(\AmazonS3 $amazonS3)
     {
         $this->amazonS3 = $amazonS3;
+
         return $this;
     }
 
@@ -186,12 +187,13 @@ class AmazonS3Adapter implements AdapterInterface
     /**
      * Set the bucket.
      *
-     * @param string $bucket
+     * @param  string   $bucket
      * @return AmazonS3
      */
     public function setBucket($bucket)
     {
         $this->bucket = $bucket;
+
         return $this;
     }
 
@@ -208,12 +210,13 @@ class AmazonS3Adapter implements AdapterInterface
     /**
      * Set the storage class.
      *
-     * @param string $storageClass
+     * @param  string   $storageClass
      * @return AmazonS3
      */
     public function setStorageClass($storageClass)
     {
         $this->storageClass = $storageClass;
+
         return $this;
     }
 
@@ -234,12 +237,13 @@ class AmazonS3Adapter implements AdapterInterface
     /**
      * Set the acl.
      *
-     * @param string $acl
+     * @param  string   $acl
      * @return AmazonS3
      */
     public function setAcl($acl)
     {
         $this->acl = $acl;
+
         return $this;
     }
 
@@ -260,12 +264,13 @@ class AmazonS3Adapter implements AdapterInterface
     /**
      * Set the uri expiration time.
      *
-     * @param string|integer $uriExpirationTime
+     * @param  string|integer $uriExpirationTime
      * @return AmazonS3
      */
     public function setUriExpirationTime($uriExpirationTime)
     {
         $this->uriExpirationTime = $uriExpirationTime;
+
         return $this;
     }
 
@@ -282,12 +287,13 @@ class AmazonS3Adapter implements AdapterInterface
     /**
      * Set the mime type detector.
      *
-     * @param \DotsUnited\Cabinet\MimeType\Detector\DetectorInterface $mimeTypeDetetcor
+     * @param  \DotsUnited\Cabinet\MimeType\Detector\DetectorInterface $mimeTypeDetetcor
      * @return Stream
      */
     public function setMimeTypeDetector(DetectorInterface $mimeTypeDetetcor)
     {
         $this->mimeTypeDetector = $mimeTypeDetetcor;
+
         return $this;
     }
 
@@ -314,6 +320,7 @@ class AmazonS3Adapter implements AdapterInterface
     public function setFilenameFilter(FilterInterface $filter)
     {
         $this->filenameFilter = $filter;
+
         return $this;
     }
 
@@ -330,8 +337,8 @@ class AmazonS3Adapter implements AdapterInterface
     /**
      * Import a external local file.
      *
-     * @param string $external The external local file
-     * @param string $file The name to store the file under
+     * @param  string            $external The external local file
+     * @param  string            $file     The name to store the file under
      * @return boolean
      * @throws \RuntimeException
      */
@@ -365,8 +372,8 @@ class AmazonS3Adapter implements AdapterInterface
     /**
      * Write data to a file.
      *
-     * @param string $file
-     * @param string|array|resource $data
+     * @param  string                $file
+     * @param  string|array|resource $data
      * @return boolean
      * @throws \RuntimeException
      */
@@ -409,7 +416,7 @@ class AmazonS3Adapter implements AdapterInterface
     /**
      * Read data from a file.
      *
-     * @param string $file
+     * @param  string         $file
      * @return string|boolean The contents or false on failure
      */
     public function read($file)
@@ -433,8 +440,8 @@ class AmazonS3Adapter implements AdapterInterface
     /**
      * Return a read-only stream resource for a file.
      *
-     * @param string $file
-     * @return resource|boolean The resource or false on failure
+     * @param  string            $file
+     * @return resource|boolean  The resource or false on failure
      * @throws \RuntimeException
      */
     public function stream($file)
@@ -467,9 +474,9 @@ class AmazonS3Adapter implements AdapterInterface
     /**
      * Copy a file internally.
      *
-     * @param string $src
-     * @param string $dest
-     * @return boolean Whether the file was copied
+     * @param  string            $src
+     * @param  string            $dest
+     * @return boolean           Whether the file was copied
      * @throws \RuntimeException
      */
     public function copy($src, $dest)
@@ -506,8 +513,8 @@ class AmazonS3Adapter implements AdapterInterface
     /**
      * Rename a file internally.
      *
-     * @param string $src
-     * @param string $dest
+     * @param  string  $src
+     * @param  string  $dest
      * @return boolean Whether the file was renamed
      */
     public function rename($src, $dest)
@@ -524,8 +531,8 @@ class AmazonS3Adapter implements AdapterInterface
     /**
      * Delete a file.
      *
-     * @param string $file
-     * @return boolean Whether the file was deleted
+     * @param  string            $file
+     * @return boolean           Whether the file was deleted
      * @throws \RuntimeException
      */
     public function unlink($file)
@@ -546,8 +553,8 @@ class AmazonS3Adapter implements AdapterInterface
     /**
      * Return whether a file exists.
      *
-     * @param string $file
-     * @return boolean Whether the file exists
+     * @param  string            $file
+     * @return boolean           Whether the file exists
      * @throws \RuntimeException
      */
     public function exists($file)
@@ -566,8 +573,8 @@ class AmazonS3Adapter implements AdapterInterface
     /**
      * Return the files size.
      *
-     * @param string $file
-     * @return integer The file size in bytes
+     * @param  string            $file
+     * @return integer           The file size in bytes
      * @throws \RuntimeException
      */
     public function size($file)
@@ -598,8 +605,8 @@ class AmazonS3Adapter implements AdapterInterface
     /**
      * Try to determine and return a files MIME content type.
      *
-     * @param string $file
-     * @return string The MIME content type
+     * @param  string            $file
+     * @return string            The MIME content type
      * @throws \RuntimeException
      */
     public function type($file)
@@ -630,8 +637,8 @@ class AmazonS3Adapter implements AdapterInterface
     /**
      * Return the web-accessible uri for the given file.
      *
-     * @param string $file
-     * @return string The file uri
+     * @param  string            $file
+     * @return string            The file uri
      * @throws \RuntimeException
      */
     public function uri($file)

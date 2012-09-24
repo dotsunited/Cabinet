@@ -22,24 +22,24 @@ interface DetectorInterface
     /**
      * Detect mime type from a file.
      *
-     * @param string $file
+     * @param  string $file
      * @return string
      */
-    function detectFromFile($file);
+    public function detectFromFile($file);
 
     /**
      * Detect mime type from a string.
      *
-     * @param string $string
+     * @param  string $string
      * @return string
      */
-    function detectFromString($string);
+    public function detectFromString($string);
 
     /**
      * Detect mime type from a resource.
      *
-     * @param resource $resource
+     * @param  resource $resource
      * @return string
      */
-    function detectFromResource($resource);
+    public function detectFromResource($resource);
 }

@@ -22,8 +22,8 @@ interface FilterInterface
     /**
      * Returns the result of filtering $value
      *
-     * @param mixed $value
+     * @param  mixed $value
      * @return mixed
      */
-    function filter($value);
+    public function filter($value);
 }

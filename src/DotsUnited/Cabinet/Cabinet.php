@@ -35,8 +35,8 @@ class Cabinet
      * If the first argument is of type array, it is assumed to contain
      * all parameters, and the second argument is ignored.
      *
-     * @param string|array $adapter string Name of adapter class, or array.
-     * @param array $config OPTIONAL; An array of adapter configurations.
+     * @param  string|array                                 $adapter string Name of adapter class, or array.
+     * @param  array                                        $config  OPTIONAL; An array of adapter configurations.
      * @return \DotsUnited\Cabinet\Adapter\AdapterInterface
      * @throws \InvalidArgumentException
      */

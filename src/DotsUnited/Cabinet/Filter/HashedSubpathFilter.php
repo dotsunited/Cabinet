@@ -63,12 +63,13 @@ class HashedSubpathFilter implements FilterInterface
     /**
      * Set level.
      *
-     * @param integer $level
+     * @param  integer       $level
      * @return HashedSubpath
      */
     public function setLevel($level)
     {
         $this->level = (integer) $level;
+
         return $this;
     }
 
@@ -85,7 +86,7 @@ class HashedSubpathFilter implements FilterInterface
     /**
      * Set callback.
      *
-     * @param callback $callback
+     * @param  callback                  $callback
      * @return HashedSubpath
      * @throws \InvalidArgumentException
      */
@@ -96,6 +97,7 @@ class HashedSubpathFilter implements FilterInterface
         }
 
         $this->callback = $callback;
+
         return $this;
     }
 
@@ -112,12 +114,13 @@ class HashedSubpathFilter implements FilterInterface
     /**
      * Set preserve dirs.
      *
-     * @param boolean $preserveDirs
+     * @param  boolean       $preserveDirs
      * @return HashedSubpath
      */
     public function setPreserveDirs($preserveDirs)
     {
         $this->preserveDirs = (boolean) $preserveDirs;
+
         return $this;
     }
 
@@ -134,7 +137,7 @@ class HashedSubpathFilter implements FilterInterface
     /**
      * Returns the result of filtering $value.
      *
-     * @param mixed $value
+     * @param  mixed             $value
      * @return mixed
      * @throws \RuntimeException
      */

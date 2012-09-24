@@ -111,7 +111,7 @@ class StreamAdapter implements AdapterInterface
     /**
      * Set the base path.
      *
-     * @param string $basePath
+     * @param  string $basePath
      * @return Stream
      */
     public function setBasePath($basePath)
@@ -123,6 +123,7 @@ class StreamAdapter implements AdapterInterface
         }
 
         $this->basePath = $basePath;
+
         return $this;
     }
 
@@ -139,7 +140,7 @@ class StreamAdapter implements AdapterInterface
     /**
      * Set the base uri.
      *
-     * @param string $baseUri
+     * @param  string $baseUri
      * @return Stream
      */
     public function setBaseUri($baseUri)
@@ -151,6 +152,7 @@ class StreamAdapter implements AdapterInterface
         }
 
         $this->baseUri = $baseUri;
+
         return $this;
     }
 
@@ -167,7 +169,7 @@ class StreamAdapter implements AdapterInterface
     /**
      * Set the directory umask.
      *
-     * @param integer|string $directoryUmask
+     * @param  integer|string $directoryUmask
      * @return Stream
      */
     public function setDirectoryUmask($directoryUmask)
@@ -179,6 +181,7 @@ class StreamAdapter implements AdapterInterface
         }
 
         $this->directoryUmask = $directoryUmask;
+
         return $this;
     }
 
@@ -195,7 +198,7 @@ class StreamAdapter implements AdapterInterface
     /**
      * Set the file umask.
      *
-     * @param integer|string $fileUmask
+     * @param  integer|string $fileUmask
      * @return Stream
      */
     public function setFileUmask($fileUmask)
@@ -207,6 +210,7 @@ class StreamAdapter implements AdapterInterface
         }
 
         $this->fileUmask = $fileUmask;
+
         return $this;
     }
 
@@ -223,12 +227,13 @@ class StreamAdapter implements AdapterInterface
     /**
      * Set the stream context.
      *
-     * @param array|resource $streamContext
+     * @param  array|resource $streamContext
      * @return Stream
      */
     public function setStreamContext($streamContext)
     {
         $this->streamContext = $streamContext;
+
         return $this;
     }
 
@@ -251,12 +256,13 @@ class StreamAdapter implements AdapterInterface
     /**
      * Set the mime type detector.
      *
-     * @param \DotsUnited\Cabinet\MimeType\Detector\DetectorInterface $mimeTypeDetetcor
+     * @param  \DotsUnited\Cabinet\MimeType\Detector\DetectorInterface $mimeTypeDetetcor
      * @return Stream
      */
     public function setMimeTypeDetector(DetectorInterface $mimeTypeDetetcor)
     {
         $this->mimeTypeDetector = $mimeTypeDetetcor;
+
         return $this;
     }
 
@@ -283,6 +289,7 @@ class StreamAdapter implements AdapterInterface
     public function setFilenameFilter(FilterInterface $filter)
     {
         $this->filenameFilter = $filter;
+
         return $this;
     }
 
@@ -299,8 +306,8 @@ class StreamAdapter implements AdapterInterface
     /**
      * Import a external local file.
      *
-     * @param string $external The external local file
-     * @param string $file The name to store the file under
+     * @param  string  $external The external local file
+     * @param  string  $file     The name to store the file under
      * @return boolean
      */
     public function import($external, $file)
@@ -321,8 +328,8 @@ class StreamAdapter implements AdapterInterface
     /**
      * Write data to a file.
      *
-     * @param string $file
-     * @param string|array|resource $data
+     * @param  string                $file
+     * @param  string|array|resource $data
      * @return boolean
      */
     public function write($file, $data)
@@ -341,7 +348,7 @@ class StreamAdapter implements AdapterInterface
     /**
      * Read data from a file.
      *
-     * @param string $file
+     * @param  string         $file
      * @return string|boolean The contents or false on failure
      */
     public function read($file)
@@ -354,7 +361,7 @@ class StreamAdapter implements AdapterInterface
     /**
      * Return a read-only stream resource for a file.
      *
-     * @param string $file
+     * @param  string           $file
      * @return resource|boolean The resource or false on failure
      */
     public function stream($file)
@@ -367,8 +374,8 @@ class StreamAdapter implements AdapterInterface
     /**
      * Copy a file internally.
      *
-     * @param string $src
-     * @param string $dest
+     * @param  string  $src
+     * @param  string  $dest
      * @return boolean Whether the file was copied
      */
     public function copy($src, $dest)
@@ -388,8 +395,8 @@ class StreamAdapter implements AdapterInterface
     /**
      * Rename a file internally.
      *
-     * @param string $src
-     * @param string $dest
+     * @param  string  $src
+     * @param  string  $dest
      * @return boolean Whether the file was renamed
      */
     public function rename($src, $dest)
@@ -412,7 +419,7 @@ class StreamAdapter implements AdapterInterface
     /**
      * Delete a file.
      *
-     * @param string $file
+     * @param  string  $file
      * @return boolean Whether the file was deleted
      */
     public function unlink($file)
@@ -429,7 +436,7 @@ class StreamAdapter implements AdapterInterface
     /**
      * Return whether a file exists.
      *
-     * @param string $file
+     * @param  string  $file
      * @return boolean Whether the file exists
      */
     public function exists($file)
@@ -442,7 +449,7 @@ class StreamAdapter implements AdapterInterface
     /**
      * Return the files size.
      *
-     * @param string $file
+     * @param  string  $file
      * @return integer The file size in bytes
      */
     public function size($file)
@@ -455,7 +462,7 @@ class StreamAdapter implements AdapterInterface
     /**
      * Try to determine and return a files MIME content type.
      *
-     * @param string $file
+     * @param  string $file
      * @return string The MIME content type
      */
     public function type($file)
@@ -468,7 +475,7 @@ class StreamAdapter implements AdapterInterface
     /**
      * Return the web-accessible uri for the given file.
      *
-     * @param string $file
+     * @param  string $file
      * @return string The file uri
      */
     public function uri($file)
@@ -483,7 +490,7 @@ class StreamAdapter implements AdapterInterface
     /**
      * Return the path for the given file.
      *
-     * @param string $file
+     * @param  string $file
      * @return string The file path
      */
     public function path($file)
@@ -511,7 +518,7 @@ class StreamAdapter implements AdapterInterface
      *
      * <code>null</code> is returned if the file has no parent.
      *
-     * @param string $file
+     * @param  string $file
      * @return string The parent directory of a file
      */
     private function parent($file)
@@ -528,7 +535,7 @@ class StreamAdapter implements AdapterInterface
     /**
      * Create a file path for the given file.
      *
-     * @param string $file
+     * @param  string         $file
      * @return string|boolean The path on success, false otherwise
      */
     private function makePath($file)
@@ -561,7 +568,7 @@ class StreamAdapter implements AdapterInterface
     /**
      * Delete the internal path for a file.
      *
-     * @param string $file
+     * @param  string $file
      * @return void
      */
     private function deletePath($file)

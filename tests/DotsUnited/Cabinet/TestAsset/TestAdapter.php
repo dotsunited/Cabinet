@@ -37,8 +37,8 @@ class TestAdapter implements AdapterInterface
     /**
      * Import a external local file.
      *
-     * @param string $external The external local file
-     * @param string $file The name to store the file under
+     * @param  string  $external The external local file
+     * @param  string  $file     The name to store the file under
      * @return boolean
      */
     public function import($external, $file) {}
@@ -46,8 +46,8 @@ class TestAdapter implements AdapterInterface
     /**
      * Write data to a file.
      *
-     * @param string $file
-     * @param string|array|resource $data
+     * @param  string                $file
+     * @param  string|array|resource $data
      * @return boolean
      */
     public function write($file, $data) {}
@@ -55,7 +55,7 @@ class TestAdapter implements AdapterInterface
     /**
      * Read data from a file.
      *
-     * @param string $file
+     * @param  string         $file
      * @return string|boolean The contents or false on failure
      */
     public function read($file) {}
@@ -63,7 +63,7 @@ class TestAdapter implements AdapterInterface
     /**
      * Return a read-only stream resource for a file.
      *
-     * @param string $file
+     * @param  string           $file
      * @return resource|boolean The resource or false on failure
      */
     public function stream($file) {}
@@ -71,8 +71,8 @@ class TestAdapter implements AdapterInterface
     /**
      * Copy a file internally.
      *
-     * @param string $src
-     * @param string $dest
+     * @param  string  $src
+     * @param  string  $dest
      * @return boolean Whether the file was copied
      */
     public function copy($src, $dest) {}
@@ -80,8 +80,8 @@ class TestAdapter implements AdapterInterface
     /**
      * Rename a file internally.
      *
-     * @param string $src
-     * @param string $dest
+     * @param  string  $src
+     * @param  string  $dest
      * @return boolean Whether the file was renamed
      */
     public function rename($src, $dest) {}
@@ -89,7 +89,7 @@ class TestAdapter implements AdapterInterface
     /**
      * Delete a file.
      *
-     * @param string $file
+     * @param  string  $file
      * @return boolean Whether the file was deleted
      */
     public function unlink($file) {}
@@ -97,7 +97,7 @@ class TestAdapter implements AdapterInterface
     /**
      * Return whether a file exists.
      *
-     * @param string $file
+     * @param  string  $file
      * @return boolean Whether the file exists
      */
     public function exists($file) {}
@@ -105,7 +105,7 @@ class TestAdapter implements AdapterInterface
     /**
      * Return the files size.
      *
-     * @param string $file
+     * @param  string  $file
      * @return integer The file size in bytes
      */
     public function size($file) {}
@@ -113,7 +113,7 @@ class TestAdapter implements AdapterInterface
     /**
      * Try to determine and return a files MIME content type.
      *
-     * @param string $file
+     * @param  string $file
      * @return string The MIME content type
      */
     public function type($file) {}
@@ -121,7 +121,7 @@ class TestAdapter implements AdapterInterface
     /**
      * Return the uri for the given file.
      *
-     * @param string $file
+     * @param  string $file
      * @return string The file uri
      */
     public function uri($file) {}

@@ -24,97 +24,97 @@ interface AdapterInterface
      *
      * @param array $config
      */
-    function __construct(array $config = array());
+    public function __construct(array $config = array());
 
     /**
      * Import a external local file.
      *
-     * @param string $external The external local file
-     * @param string $file The name to store the file under
+     * @param  string  $external The external local file
+     * @param  string  $file     The name to store the file under
      * @return boolean
      */
-    function import($external, $file);
+    public function import($external, $file);
 
     /**
      * Write data to a file.
      *
-     * @param string $file
-     * @param string|array|resource $data
+     * @param  string                $file
+     * @param  string|array|resource $data
      * @return boolean
      */
-    function write($file, $data);
+    public function write($file, $data);
 
     /**
      * Read data from a file.
      *
-     * @param string $file
+     * @param  string         $file
      * @return string|boolean The contents or false on failure
      */
-    function read($file);
+    public function read($file);
 
     /**
      * Return a read-only stream resource for a file.
      *
-     * @param string $file
+     * @param  string           $file
      * @return resource|boolean The resource or false on failure
      */
-    function stream($file);
+    public function stream($file);
 
     /**
      * Copy a file internally.
      *
-     * @param string $src
-     * @param string $dest
+     * @param  string  $src
+     * @param  string  $dest
      * @return boolean Whether the file was copied
      */
-    function copy($src, $dest);
+    public function copy($src, $dest);
 
     /**
      * Rename a file internally.
      *
-     * @param string $src
-     * @param string $dest
+     * @param  string  $src
+     * @param  string  $dest
      * @return boolean Whether the file was renamed
      */
-    function rename($src, $dest);
+    public function rename($src, $dest);
 
     /**
      * Delete a file.
      *
-     * @param string $file
+     * @param  string  $file
      * @return boolean Whether the file was deleted
      */
-    function unlink($file);
+    public function unlink($file);
 
     /**
      * Return whether a file exists.
      *
-     * @param string $file
+     * @param  string  $file
      * @return boolean Whether the file exists
      */
-    function exists($file);
+    public function exists($file);
 
     /**
      * Return the files size.
      *
-     * @param string $file
+     * @param  string  $file
      * @return integer The file size in bytes
      */
-    function size($file);
+    public function size($file);
 
     /**
      * Try to determine and return a files MIME content type.
      *
-     * @param string $file
+     * @param  string $file
      * @return string The MIME content type
      */
-    function type($file);
+    public function type($file);
 
     /**
      * Return the web-accessible uri for the given file.
      *
-     * @param string $file
+     * @param  string $file
      * @return string The file uri
      */
-    function uri($file);
+    public function uri($file);
 }

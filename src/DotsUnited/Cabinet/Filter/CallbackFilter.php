@@ -26,7 +26,7 @@ class CallbackFilter implements FilterInterface
 
     /**
      * Constructor.
-     * 
+     *
      * @param mixed $callback
      */
     public function __construct($callback)
@@ -37,7 +37,7 @@ class CallbackFilter implements FilterInterface
     /**
      * Returns the result of filtering $value.
      *
-     * @param mixed $value
+     * @param  mixed $value
      * @return mixed
      */
     public function filter($value)
