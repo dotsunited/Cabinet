@@ -32,24 +32,6 @@ require 'vendor/autoload.php';
 ?>
 ```
 
-### Note ###
-
-If you require `dotsunited/cabinet` in your project's composer.json, make sure you define the PEAR repository for `aws/sdk`:
-
-```javascript
-{
-    "repositories": [
-        {
-            "type": "pear",
-            "url": "http://pear.amazonwebservices.com"
-        }
-    ],
-    "require": {
-        "dotsunited/cabinet": "0.9.3"
-    }
-}
-```
-
 Usage
 -----
 
