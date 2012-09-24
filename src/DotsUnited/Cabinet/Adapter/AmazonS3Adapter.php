@@ -19,7 +19,6 @@ use DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector;
  * DotsUnited\Cabinet\Adapter\AmazonS3Adapter
  *
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
- * @version @package_version@
  */
 class AmazonS3Adapter implements AdapterInterface
 {

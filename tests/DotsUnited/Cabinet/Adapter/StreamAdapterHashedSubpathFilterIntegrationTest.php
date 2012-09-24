@@ -15,7 +15,6 @@ use DotsUnited\Cabinet\Filter\HashedSubpathFilter;
 
 /**
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
- * @version @package_version@
  *
  * @covers  DotsUnited\Cabinet\Adapter\StreamAdapter
  * @covers  DotsUnited\Cabinet\Filter\HashedSubpathFilter

@@ -15,7 +15,6 @@ use DotsUnited\Cabinet\Adapter\AdapterInterface;
 
 /**
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
- * @version @package_version@
  */
 class TestAdapter implements AdapterInterface
 {

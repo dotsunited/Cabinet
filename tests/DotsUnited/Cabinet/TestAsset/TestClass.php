@@ -13,7 +13,6 @@ namespace DotsUnited\Cabinet\TestAsset;
 
 /**
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
- * @version @package_version@
  */
 class TestClass
 {

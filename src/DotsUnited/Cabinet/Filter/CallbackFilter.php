@@ -15,7 +15,6 @@ namespace DotsUnited\Cabinet\Filter;
  * DotsUnited\Cabinet\Filter\CallbackFilter
  *
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
- * @version @package_version@
  */
 class CallbackFilter implements FilterInterface
 {

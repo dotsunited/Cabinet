@@ -15,7 +15,6 @@ namespace DotsUnited\Cabinet;
  * DotsUnited\Cabinet\Cabinet
  *
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
- * @version @package_version@
  */
 class Cabinet
 {

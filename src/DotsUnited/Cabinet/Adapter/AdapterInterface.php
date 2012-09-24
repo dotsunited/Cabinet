@@ -15,7 +15,6 @@ namespace DotsUnited\Cabinet\Adapter;
  * DotsUnited\Cabinet\AdapterInterface
  *
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
- * @version @package_version@
  */
 interface AdapterInterface
 {

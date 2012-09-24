@@ -13,7 +13,6 @@ namespace DotsUnited\Cabinet\MimeType\Detector;
 
 /**
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
- * @version @package_version@
  *
  * @covers  DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector
  */

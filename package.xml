@@ -35,41 +35,31 @@
      <dir name="Cabinet">
       <dir name="Adapter">
        <file install-as="DotsUnited/Cabinet/Adapter/AdapterInterface.php" name="AdapterInterface.php" role="php">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
        <file install-as="DotsUnited/Cabinet/Adapter/AmazonS3Adapter.php" name="AmazonS3Adapter.php" role="php">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
        <file install-as="DotsUnited/Cabinet/Adapter/StreamAdapter.php" name="StreamAdapter.php" role="php">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
       </dir>
       <dir name="Filter">
        <file install-as="DotsUnited/Cabinet/Filter/CallbackFilter.php" name="CallbackFilter.php" role="php">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
        <file install-as="DotsUnited/Cabinet/Filter/FilterInterface.php" name="FilterInterface.php" role="php">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
        <file install-as="DotsUnited/Cabinet/Filter/FilterChain.php" name="FilterChain.php" role="php">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
        <file install-as="DotsUnited/Cabinet/Filter/HashedSubpathFilter.php" name="HashedSubpathFilter.php" role="php">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
       </dir>
       <dir name="MimeType">
        <dir name="Detector">
         <file install-as="DotsUnited/Cabinet/MimeType/Detector/DetectorInterface.php" name="DetectorInterface.php" role="php">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
         <file install-as="DotsUnited/Cabinet/MimeType/Detector/FileinfoDetector.php" name="FileinfoDetector.php" role="php">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
        </dir>
       </dir>
       <file install-as="DotsUnited/Cabinet/Cabinet.php" name="Cabinet.php" role="php">
-       <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
      </dir>
     </dir>

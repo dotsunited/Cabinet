@@ -15,7 +15,6 @@ namespace DotsUnited\Cabinet\Filter;
  * DotsUnited\Cabinet\Filter\FilterChain
  *
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
- * @version @package_version@
  */
 class FilterChain implements FilterInterface
 {

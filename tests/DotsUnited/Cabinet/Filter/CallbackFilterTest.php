@@ -13,7 +13,6 @@ namespace DotsUnited\Cabinet\Filter;
 
 /**
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
- * @version @package_version@
  *
  * @covers  DotsUnited\Cabinet\Filter\CallbackFilter
  */

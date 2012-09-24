@@ -13,7 +13,6 @@ namespace DotsUnited\Cabinet\Adapter;
 
 /**
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
- * @version @package_version@
  *
  * @covers  DotsUnited\Cabinet\Adapter\AmazonS3Adapter
  */

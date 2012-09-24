@@ -19,7 +19,6 @@ use DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector;
  * DotsUnited\Cabinet\Adapter\StreamAdapter
  *
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
- * @version @package_version@
  */
 class StreamAdapter implements AdapterInterface
 {

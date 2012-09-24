@@ -15,7 +15,6 @@ namespace DotsUnited\Cabinet\MimeType\Detector;
  * DotsUnited\Cabinet\MimeType\Detector\DetectorInterface
  *
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
- * @version @package_version@
  */
 interface DetectorInterface
 {
