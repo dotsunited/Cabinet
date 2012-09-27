@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.9.4 (2012-09-27)
+------------------
+
+  * Composer related fixes (moved AWS SDK to the suggest and used the packagist repository available since version 1.5.7)
+
 0.9.3 (2012-02-28)
 ------------------
 
