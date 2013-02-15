@@ -3,7 +3,7 @@
 /*
  * This file is part of Cabinet.
  *
- * (c) 2012 Jan Sorgalla <jan.sorgalla@dotsunited.de>
+ * (c) 2013 Jan Sorgalla <jan.sorgalla@dotsunited.de>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
