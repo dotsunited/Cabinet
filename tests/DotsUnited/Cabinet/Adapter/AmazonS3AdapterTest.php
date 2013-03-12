@@ -20,16 +20,9 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
 {
     private function setupAdapter()
     {
-        if (!class_exists('\CFRuntime')) {
-            $this->markTestSkipped(
-                'AWS SDK for PHP is not available. Install dev requirements with "php composer.phar install --dev".'
-            );
-
-            return false;
-        }
-
-        $amazonS3 = $this->getMockBuilder('\AmazonS3')
+        $s3Client = $this->getMockBuilder('Aws\S3\S3Client')
                          ->disableOriginalConstructor()
+                         ->setMethods(array('putObject', 'getObject', 'headObject', 'copyObject', 'deleteObject', 'doesObjectExist', 'getPresignedUrl', 'get'))
                          ->getMock();
 
         $mimeTypeDetector = $this->getMockBuilder('DotsUnited\Cabinet\MimeType\Detector\DetectorInterface')
@@ -59,7 +52,7 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnArgument(0));
 
         $config = array(
-            'amazon_s3'          => $amazonS3,
+            's3_client'          => $s3Client,
             'bucket'             => 'testbucket',
             'mime_type_detector' => $mimeTypeDetector,
             'filename_filter'    => $filenameFilter
@@ -70,35 +63,35 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
         return $adapter;
     }
 
-    private function getResponse(array $header = array(), $body = '', $status = 200)
+    private function getResponse(array $headers = array(), $body = '', $status = 200)
     {
-        return new \CFResponse($header, $body, $status);
+        $data = array(
+            'Body' => \Guzzle\Http\EntityBody::factory($body)
+        );
 
-        /*$response = $this->getMockBuilder('\CFResponse')
-                         ->disableOriginalConstructor()
-                         ->getMock();
-        $response
-            ->expects($this->once())
-            ->method('isOk')
-            ->withAnyParameters()
-            ->will($this->returnValue(true));
+        foreach ($headers as $header => $value) {
+            $data[str_replace('-', '', $header)] = $value;
+        }
 
-        return $response;*/
+        return new \Guzzle\Service\Resource\Model($data);
     }
 
     /**************************************************************************/
 
     public function testDefaultConfig()
     {
+        $s3Client = $this->getMockBuilder('Aws\S3\S3Client')
+                         ->disableOriginalConstructor()
+                         ->getMock();
+
         $adapter = new AmazonS3Adapter(array(
-            'aws_key'        => 'foo',
-            'aws_secret_key' => 'bar'
+            's3_client' => $s3Client,
         ));
 
-        $this->assertInstanceOf('\AmazonS3', $adapter->getAmazonS3());
+        $this->assertInstanceOf('Aws\S3\S3Client', $adapter->getS3Client());
         $this->assertNull($adapter->getBucket());
-        $this->assertEquals(\AmazonS3::STORAGE_STANDARD, $adapter->getStorageClass());
-        $this->assertEquals(\AmazonS3::ACL_PRIVATE, $adapter->getAcl());
+        $this->assertEquals(\Aws\S3\Enum\StorageClass::STANDARD, $adapter->getStorageClass());
+        $this->assertEquals(\Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS, $adapter->getAcl());
         $this->assertSame(0, $adapter->getUriExpirationTime());
         $this->assertInstanceOf('DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector', $adapter->getMimeTypeDetector());
         $this->assertNull($adapter->getFilenameFilter());
@@ -106,6 +99,10 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructorAcceptsConfig()
     {
+        $s3Client = $this->getMockBuilder('Aws\S3\S3Client')
+                         ->disableOriginalConstructor()
+                         ->getMock();
+
         $detectorMock = $this->getMockBuilder('DotsUnited\Cabinet\MimeType\Detector\DetectorInterface')
                              ->getMock();
 
@@ -113,11 +110,10 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
                            ->getMock();
 
         $config = array(
-            'aws_key'             => 'foo',
-            'aws_secret_key'      => 'bar',
+            's3_client'           => $s3Client,
             'bucket'              => 'testbucket',
-            'storage_class'       => \AmazonS3::STORAGE_REDUCED,
-            'acl'                 => \AmazonS3::ACL_PUBLIC,
+            'storage_class'       => \Aws\S3\Enum\StorageClass::REDUCED_REDUNDANCY,
+            'acl'                 => \Aws\S3\Enum\CannedAcl::PUBLIC_READ,
             'uri_expiration_time' => 12345,
             'mime_type_detector'  => $detectorMock,
             'filename_filter'     => $filterMock
@@ -135,32 +131,6 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('DotsUnited\Cabinet\Filter\FilterInterface', $adapter->getFilenameFilter());
     }
 
-    public function testConstructorCatchesAmazonS3Exception()
-    {
-        $this->setExpectedException('\RuntimeException');
-
-        $config = array(
-            'aws_key'        => null,
-            'aws_secret_key' => null
-        );
-
-        new AmazonS3Adapter($config);
-    }
-
-    public function testConstructorPassesAmazonS3ConfigAsArrayToInstance()
-    {
-        $config = array(
-            'aws_key'        => 'foo',
-            'aws_secret_key' => 'bar',
-            'amazon_s3'      => array(
-                'vhost' => 'test.example.com'
-            )
-        );
-
-        $adapter = new AmazonS3Adapter($config);
-        $this->assertEquals('test.example.com', $adapter->getAmazonS3()->vhost);
-    }
-
     /**************************************************************************/
 
     public function testImport()
@@ -169,20 +139,24 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $opt = array(
-            'fileUpload'  => __DIR__ . '/_files/test.txt',
-            'acl'         => \AmazonS3::ACL_PRIVATE,
-            'storage'     => \AmazonS3::STORAGE_STANDARD,
-            'contentType' => 'text/plain'
+        $external = fopen(__DIR__ . '/_files/test.txt', 'r');
+
+        $params = array(
+            'Bucket'       => 'testbucket',
+            'Key'          => 'subdir/testImport.txt',
+            'Body'         => $external,
+            'ACL'          => \Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS,
+            'StorageClass' => \Aws\S3\Enum\StorageClass::STANDARD,
+            'ContentType' => 'text/plain'
         );
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('create_object')
-            ->with('testbucket', 'subdir/testImport.txt', $opt)
+            ->method('putObject')
+            ->with($params)
             ->will($this->returnValue($this->getResponse()));
 
-        $return = $adapter->import(__DIR__ . '/_files/test.txt', 'subdir/testImport.txt');
+        $return = $adapter->import($external, 'subdir/testImport.txt');
         $this->assertTrue($return);
     }
 
@@ -192,13 +166,13 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $this->setExpectedException('\RuntimeException', 'Exception thrown by \AmazonS3: Test');
+        $this->setExpectedException('\RuntimeException', 'Exception thrown by Aws\S3\S3Client: Test');
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('create_object')
+            ->method('putObject')
             ->withAnyParameters()
-            ->will($this->throwException(new \S3_Exception('Test')));
+            ->will($this->throwException(new \Aws\S3\Exception\S3Exception('Test')));
 
         $adapter->import(__DIR__ . '/_files/test.txt', 'subdir/testImport.txt');
     }
@@ -209,17 +183,19 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $opt = array(
-            'acl'         => \AmazonS3::ACL_PRIVATE,
-            'storage'     => \AmazonS3::STORAGE_STANDARD,
-            'body'        => 'somedata',
-            'contentType' => 'text/plain'
+        $params = array(
+            'Bucket'       => 'testbucket',
+            'Key'          => 'subdir/testWriteString.txt',
+            'Body'         => 'somedata',
+            'ACL'          => \Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS,
+            'StorageClass' => \Aws\S3\Enum\StorageClass::STANDARD,
+            'ContentType' => 'text/plain'
         );
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('create_object')
-            ->with('testbucket', 'subdir/testWriteString.txt', $opt)
+            ->method('putObject')
+            ->with($params)
             ->will($this->returnValue($this->getResponse()));
 
         $return = $adapter->write('subdir/testWriteString.txt', 'somedata');
@@ -234,17 +210,19 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
 
         $resource = fopen(__DIR__ . '/_files/test.txt', 'rb');
 
-        $opt = array(
-            'acl'         => \AmazonS3::ACL_PRIVATE,
-            'storage'     => \AmazonS3::STORAGE_STANDARD,
-            'fileUpload'  => $resource,
-            'contentType' => 'text/plain'
+        $params = array(
+            'Bucket'       => 'testbucket',
+            'Key'          => 'subdir/testWriteResource.txt',
+            'Body'         => $resource,
+            'ACL'          => \Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS,
+            'StorageClass' => \Aws\S3\Enum\StorageClass::STANDARD,
+            'ContentType' => 'text/plain'
         );
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('create_object')
-            ->with('testbucket', 'subdir/testWriteResource.txt', $opt)
+            ->method('putObject')
+            ->with($params)
             ->will($this->returnValue($this->getResponse()));
 
         $return = $adapter->write('subdir/testWriteResource.txt', $resource);
@@ -257,17 +235,19 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $opt = array(
-            'acl'         => \AmazonS3::ACL_PRIVATE,
-            'storage'     => \AmazonS3::STORAGE_STANDARD,
-            'body'        => 'somedata',
-            'contentType' => 'text/plain'
+        $params = array(
+            'Bucket'       => 'testbucket',
+            'Key'          => 'subdir/testWriteArray.txt',
+            'Body'         => 'somedata',
+            'ACL'          => \Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS,
+            'StorageClass' => \Aws\S3\Enum\StorageClass::STANDARD,
+            'ContentType' => 'text/plain'
         );
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('create_object')
-            ->with('testbucket', 'subdir/testWriteArray.txt', $opt)
+            ->method('putObject')
+            ->with($params)
             ->will($this->returnValue($this->getResponse()));
 
         $return = $adapter->write('subdir/testWriteArray.txt', array('s', 'o', 'm', 'e', 'd', 'a', 't', 'a'));
@@ -280,13 +260,13 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $this->setExpectedException('\RuntimeException', 'Exception thrown by \AmazonS3: Test');
+        $this->setExpectedException('\RuntimeException', 'Exception thrown by Aws\S3\S3Client: Test');
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('create_object')
+            ->method('putObject')
             ->withAnyParameters()
-            ->will($this->throwException(new \S3_Exception('Test')));
+            ->will($this->throwException(new \Aws\S3\Exception\S3Exception('Test')));
 
         $adapter->write('subdir/testWriteArray.txt', 'somedata');
     }
@@ -297,9 +277,9 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('get_object')
+            ->method('getObject')
             ->withAnyParameters()
             ->will($this->returnValue($this->getResponse()));
 
@@ -308,35 +288,19 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING, $return);
     }
 
-    public function testReadReturnsFalseIfResponseIsNotOk()
-    {
-        if (!$adapter = $this->setupAdapter()) {
-            return;
-        }
-
-        $adapter->getAmazonS3()
-            ->expects($this->once())
-            ->method('get_object')
-            ->withAnyParameters()
-            ->will($this->returnValue($this->getResponse(array(), '', 404)));
-
-        $return = $adapter->read('subdir/test.txt');
-        $this->assertFalse($return);
-    }
-
     public function testReadCatchesAmazonS3Exception()
     {
         if (!$adapter = $this->setupAdapter()) {
             return;
         }
 
-        $this->setExpectedException('\RuntimeException', 'Exception thrown by \AmazonS3: Test');
+        $this->setExpectedException('\RuntimeException', 'Exception thrown by Aws\S3\S3Client: Test');
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('get_object')
+            ->method('getObject')
             ->withAnyParameters()
-            ->will($this->throwException(new \S3_Exception('Test')));
+            ->will($this->throwException(new \Aws\S3\Exception\S3Exception('Test')));
 
         $adapter->read('subdir/test.txt');
     }
@@ -347,30 +311,14 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('get_object')
+            ->method('getObject')
             ->withAnyParameters()
             ->will($this->returnValue($this->getResponse()));
 
         $return = $adapter->stream('subdir/test.txt');
         $this->assertInternalType(\PHPUnit_Framework_Constraint_IsType::TYPE_RESOURCE, $return);
-    }
-
-    public function testStreamReturnsFalseIfResponseIsNotOk()
-    {
-        if (!$adapter = $this->setupAdapter()) {
-            return;
-        }
-
-        $adapter->getAmazonS3()
-            ->expects($this->once())
-            ->method('get_object')
-            ->withAnyParameters()
-            ->will($this->returnValue($this->getResponse(array(), '', 404)));
-
-        $return = $adapter->stream('subdir/test.txt');
-        $this->assertFalse($return);
     }
 
     public function testStreamCatchesAmazonS3Exception()
@@ -379,13 +327,13 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $this->setExpectedException('\RuntimeException', 'Exception thrown by \AmazonS3: Test');
+        $this->setExpectedException('\RuntimeException', 'Exception thrown by Aws\S3\S3Client: Test');
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('get_object')
+            ->method('getObject')
             ->withAnyParameters()
-            ->will($this->throwException(new \S3_Exception('Test')));
+            ->will($this->throwException(new \Aws\S3\Exception\S3Exception('Test')));
 
         $adapter->stream('subdir/test.txt');
     }
@@ -396,20 +344,18 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $src = array(
-            'bucket'   => 'testbucket',
-            'filename' => 'subdir/testCopy.txt'
+        $params = array(
+            'Bucket'       => 'testbucket',
+            'Key'          => 'subdir/testCopy_copy.txt',
+            'ACL'          => \Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS,
+            'StorageClass' => \Aws\S3\Enum\StorageClass::STANDARD,
+            'CopySource'   => urlencode('testbucket/subdir/testCopy.txt')
         );
 
-        $dest = array(
-            'bucket'   => 'testbucket',
-            'filename' => 'subdir/testCopy_copy.txt'
-        );
-
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('copy_object')
-            ->with($src, $dest)
+            ->method('copyObject')
+            ->with($params)
             ->will($this->returnValue($this->getResponse()));
 
         $return = $adapter->copy('subdir/testCopy.txt', 'subdir/testCopy_copy.txt');
@@ -422,13 +368,13 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $this->setExpectedException('\RuntimeException', 'Exception thrown by \AmazonS3: Test');
+        $this->setExpectedException('\RuntimeException', 'Exception thrown by Aws\S3\S3Client: Test');
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('copy_object')
+            ->method('copyObject')
             ->withAnyParameters()
-            ->will($this->throwException(new \S3_Exception('Test')));
+            ->will($this->throwException(new \Aws\S3\Exception\S3Exception('Test')));
 
         $adapter->copy('subdir/testCopy.txt', 'subdir/testCopy_copy.txt');
     }
@@ -439,60 +385,50 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $src = array(
-            'bucket'   => 'testbucket',
-            'filename' => 'subdir/testRename.txt'
+        $params = array(
+            'Bucket'       => 'testbucket',
+            'Key'          => 'subdir/testRename_rename.txt',
+            'ACL'          => \Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS,
+            'StorageClass' => \Aws\S3\Enum\StorageClass::STANDARD,
+            'CopySource'   => urlencode('testbucket/subdir/testRename.txt')
         );
 
-        $dest = array(
-            'bucket'   => 'testbucket',
-            'filename' => 'subdir/testRename_rename.txt'
-        );
-
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('copy_object')
-            ->with($src, $dest)
+            ->method('copyObject')
+            ->with($params)
             ->will($this->returnValue($this->getResponse()));
 
-        $adapter->getAmazonS3()
+        $params = array(
+            'Bucket' => 'testbucket',
+            'Key'    => 'subdir/testRename.txt',
+        );
+
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('delete_object')
-            ->with('testbucket', 'subdir/testRename.txt')
+            ->method('deleteObject')
+            ->with($params)
             ->will($this->returnValue($this->getResponse()));
 
         $return = $adapter->rename('subdir/testRename.txt', 'subdir/testRename_rename.txt');
         $this->assertTrue($return);
     }
 
-    public function testRenameReturnsFalseIfCopyFails()
+    public function testRenameCatchesAmazonS3Exception()
     {
         if (!$adapter = $this->setupAdapter()) {
             return;
         }
 
-        $src = array(
-            'bucket'   => 'testbucket',
-            'filename' => 'subdir/testRename.txt'
-        );
+        $this->setExpectedException('\RuntimeException', 'Exception thrown by Aws\S3\S3Client: Test');
 
-        $dest = array(
-            'bucket'   => 'testbucket',
-            'filename' => 'subdir/testRename_rename.txt'
-        );
-
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('copy_object')
-            ->with($src, $dest)
-            ->will($this->returnValue($this->getResponse(array(), '', 404)));
+            ->method('copyObject')
+            ->withAnyParameters()
+            ->will($this->throwException(new \Aws\S3\Exception\S3Exception('Test')));
 
-        $adapter->getAmazonS3()
-            ->expects($this->never())
-            ->method('delete_object');
-
-        $return = $adapter->rename('subdir/testRename.txt', 'subdir/testRename_rename.txt');
-        $this->assertFalse($return);
+        $adapter->rename('subdir/testRename.txt', 'subdir/testRename_rename.txt');
     }
 
     public function testUnlink()
@@ -501,10 +437,15 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $adapter->getAmazonS3()
+        $params = array(
+            'Bucket' => 'testbucket',
+            'Key'    => 'subdir/testUnlink.txt'
+        );
+
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('delete_object')
-            ->with('testbucket', 'subdir/testUnlink.txt')
+            ->method('deleteObject')
+            ->with($params)
             ->will($this->returnValue($this->getResponse()));
 
         $return = $adapter->unlink('subdir/testUnlink.txt');
@@ -517,13 +458,13 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $this->setExpectedException('\RuntimeException', 'Exception thrown by \AmazonS3: Test');
+        $this->setExpectedException('\RuntimeException', 'Exception thrown by Aws\S3\S3Client: Test');
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('delete_object')
+            ->method('deleteObject')
             ->withAnyParameters()
-            ->will($this->throwException(new \S3_Exception('Test')));
+            ->will($this->throwException(new \Aws\S3\Exception\S3Exception('Test')));
 
         $adapter->unlink('subdir/testUnlink.txt');
     }
@@ -534,9 +475,9 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('if_object_exists')
+            ->method('doesObjectExist')
             ->with('testbucket', 'subdir/testExists.txt')
             ->will($this->returnValue(true));
 
@@ -550,13 +491,13 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $this->setExpectedException('\RuntimeException', 'Exception thrown by \AmazonS3: Test');
+        $this->setExpectedException('\RuntimeException', 'Exception thrown by Aws\S3\S3Client: Test');
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('if_object_exists')
+            ->method('doesObjectExist')
             ->withAnyParameters()
-            ->will($this->throwException(new \S3_Exception('Test')));
+            ->will($this->throwException(new \Aws\S3\Exception\S3Exception('Test')));
 
         $adapter->exists('subdir/testExists.txt');
     }
@@ -567,15 +508,20 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
+        $params = array(
+            'Bucket' => 'testbucket',
+            'Key'    => 'subdir/testSize.txt'
+        );
+
         $headers = array(
             'Content-Length' => '8'
         );
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('get_object_headers')
-            ->with('testbucket', 'subdir/testSize.txt')
-            ->will($this->returnValue($this->getResponse($headers)));
+            ->method('headObject')
+            ->with($params)
+            ->will($this->returnValue($this->getResponse($headers, '', 200)));
 
         $return = $adapter->size('subdir/testSize.txt');
         $this->assertEquals(8, $return);
@@ -587,27 +533,16 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $adapter->getAmazonS3()
+        $params = array(
+            'Bucket' => 'testbucket',
+            'Key'    => 'subdir/testSize.txt'
+        );
+
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('get_object_headers')
-            ->with('testbucket', 'subdir/testSize.txt')
-            ->will($this->returnValue($this->getResponse(array())));
-
-        $return = $adapter->size('subdir/testSize.txt');
-        $this->assertFalse($return);
-    }
-
-    public function testSizeReturnsFalseIfResponseIsNotOk()
-    {
-        if (!$adapter = $this->setupAdapter()) {
-            return;
-        }
-
-        $adapter->getAmazonS3()
-            ->expects($this->once())
-            ->method('get_object_headers')
-            ->with('testbucket', 'subdir/testSize.txt')
-            ->will($this->returnValue($this->getResponse(array(), '', 404)));
+            ->method('headObject')
+            ->with($params)
+            ->will($this->returnValue($this->getResponse(array(), '', 200)));
 
         $return = $adapter->size('subdir/testSize.txt');
         $this->assertFalse($return);
@@ -619,13 +554,13 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $this->setExpectedException('\RuntimeException', 'Exception thrown by \AmazonS3: Test');
+        $this->setExpectedException('\RuntimeException', 'Exception thrown by Aws\S3\S3Client: Test');
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('get_object_headers')
+            ->method('headObject')
             ->withAnyParameters()
-            ->will($this->throwException(new \S3_Exception('Test')));
+            ->will($this->throwException(new \Aws\S3\Exception\S3Exception('Test')));
 
         $adapter->size('subdir/testSize.txt');
     }
@@ -636,14 +571,19 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
+        $params = array(
+            'Bucket' => 'testbucket',
+            'Key'    => 'subdir/testType.txt'
+        );
+
         $headers = array(
             'Content-Type' => 'text/plain'
         );
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('get_object_headers')
-            ->with('testbucket', 'subdir/testType.txt')
+            ->method('headObject')
+            ->with($params)
             ->will($this->returnValue($this->getResponse($headers)));
 
         $return = $adapter->type('subdir/testType.txt');
@@ -656,27 +596,16 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $adapter->getAmazonS3()
+        $params = array(
+            'Bucket' => 'testbucket',
+            'Key'    => 'subdir/testType.txt'
+        );
+
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('get_object_headers')
-            ->with('testbucket', 'subdir/testType.txt')
-            ->will($this->returnValue($this->getResponse(array())));
-
-        $return = $adapter->type('subdir/testType.txt');
-        $this->assertNull($return);
-    }
-
-    public function testTypeReturnsNullIfResponseIsNotOk()
-    {
-        if (!$adapter = $this->setupAdapter()) {
-            return;
-        }
-
-        $adapter->getAmazonS3()
-            ->expects($this->once())
-            ->method('get_object_headers')
-            ->with('testbucket', 'subdir/testType.txt')
-            ->will($this->returnValue($this->getResponse(array(), '', 404)));
+            ->method('headObject')
+            ->with($params)
+            ->will($this->returnValue($this->getResponse(array(), '', 200)));
 
         $return = $adapter->type('subdir/testType.txt');
         $this->assertNull($return);
@@ -688,13 +617,13 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $this->setExpectedException('\RuntimeException', 'Exception thrown by \AmazonS3: Test');
+        $this->setExpectedException('\RuntimeException', 'Exception thrown by Aws\S3\S3Client: Test');
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('get_object_headers')
+            ->method('headObject')
             ->withAnyParameters()
-            ->will($this->throwException(new \S3_Exception('Test')));
+            ->will($this->throwException(new \Aws\S3\Exception\S3Exception('Test')));
 
         $adapter->type('subdir/testType.txt');
     }
@@ -705,10 +634,18 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $adapter->getAmazonS3()
+        $request = $this->getMock('Guzzle\Http\Message\RequestInterface');
+
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('get_object_url')
-            ->with('testbucket', 'subdir/testUri.txt', 0)
+            ->method('get')
+            ->with('testbucket/subdir/testUri.txt')
+            ->will($this->returnValue($request));
+
+        $adapter->getS3Client()
+            ->expects($this->once())
+            ->method('getPresignedUrl', 0)
+            ->with($request)
             ->will($this->returnValue('http://test/subdir/testUri.txt'));
 
         $return = $adapter->uri('subdir/testUri.txt');
@@ -722,13 +659,13 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $this->setExpectedException('\RuntimeException', 'Exception thrown by \AmazonS3: Test');
+        $this->setExpectedException('\RuntimeException', 'Exception thrown by Aws\S3\S3Client: Test');
 
-        $adapter->getAmazonS3()
+        $adapter->getS3Client()
             ->expects($this->once())
-            ->method('get_object_url')
+            ->method('getPresignedUrl')
             ->withAnyParameters()
-            ->will($this->throwException(new \S3_Exception('Test')));
+            ->will($this->throwException(new \Aws\S3\Exception\S3Exception('Test')));
 
         $adapter->uri('subdir/testUri.txt');
     }

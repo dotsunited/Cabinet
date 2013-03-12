@@ -11,6 +11,9 @@
 
 namespace DotsUnited\Cabinet\Adapter;
 
+use Aws\S3\S3Client;
+use Aws\S3\Exception\S3Exception;
+
 use DotsUnited\Cabinet\Filter\FilterInterface;
 use DotsUnited\Cabinet\MimeType\Detector\DetectorInterface;
 use DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector;
@@ -23,11 +26,11 @@ use DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector;
 class AmazonS3Adapter implements AdapterInterface
 {
     /**
-     * AmazonS3 class instance.
+     * Aws\S3\S3Client class instance.
      *
-     * @var \AmazonS3
+     * @var Aws\S3\S3Client
      */
-    private $amazonS3;
+    private $s3Client;
 
     /**
      * The bucket to store file to.
@@ -40,10 +43,10 @@ class AmazonS3Adapter implements AdapterInterface
      * The storage class setting for files.
      *
      * Allowed values:
-     *   \AmazonS3::STORAGE_STANDARD
-     *   \AmazonS3::STORAGE_REDUCED
+     *   Aws\S3\Enum\StorageClass::STANDARD
+     *   Aws\S3\Enum\StorageClass::REDUCED_REDUNDANCY
      *
-     * The default value is \AmazonS3::STORAGE_STANDARD.
+     * The default value is Aws\S3\Enum\StorageClass::STANDARD.
      *
      * @var string
      */
@@ -53,14 +56,14 @@ class AmazonS3Adapter implements AdapterInterface
      * The ACL settings for files.
      *
      * Allowed values:
-     *   \AmazonS3::ACL_PRIVATE
-     *   \AmazonS3::ACL_PUBLIC
-     *   \AmazonS3::ACL_OPEN
-     *   \AmazonS3::ACL_AUTH_READ
-     *   \AmazonS3::ACL_OWNER_READ
-     *   \AmazonS3::ACL_OWNER_FULL_CONTROL
+     *   Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS
+     *   Aws\S3\Enum\CannedAcl::PUBLIC_READ
+     *   Aws\S3\Enum\CannedAcl::PUBLIC_READ_WRITE
+     *   Aws\S3\Enum\CannedAcl::AUTHENTICATED_READ
+     *   Aws\S3\Enum\CannedAcl::BUCKET_OWNER_READ
+     *   Aws\S3\Enum\CannedAcl::BUCKET_OWNER_FULL_CONTROL
      *
-     * The default value is \AmazonS3::ACL_PRIVATE.
+     * The default value is Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS.
      *
      * @var string
      */
@@ -86,6 +89,13 @@ class AmazonS3Adapter implements AdapterInterface
      * @var \DotsUnited\Cabinet\Filter\FilterInterface
      */
     private $filenameFilter;
+    
+    /**
+     * Whether to throw exceptions.
+     *
+     * @var booleam
+     */
+    private $throwExceptions = true;
 
     /**
      * Constructor.
@@ -95,44 +105,8 @@ class AmazonS3Adapter implements AdapterInterface
      */
     public function __construct(array $config = array())
     {
-        try {
-            if (isset($config['amazon_s3'])) {
-                if (is_array($config['amazon_s3'])) {
-                    $options = $config['amazon_s3'];
-
-                    if (isset($config['aws_key'])) {
-                        $options['key'] = $config['aws_key'];
-                    }
-
-                    if (isset($config['aws_secret_key'])) {
-                        $options['secret'] = $config['aws_secret_key'];
-                    }
-
-                    $this->amazonS3 = new \AmazonS3($options);
-
-                    foreach ($config['amazon_s3'] as $key => $val) {
-                        if (property_exists($this->amazonS3, $key)) {
-                            $this->amazonS3->$key = $val;
-                        }
-                    }
-                } else {
-                    $this->setAmazonS3($config['amazon_s3']);
-                }
-            } else {
-                $options = array();
-
-                if (isset($config['aws_key'])) {
-                    $options['key'] = $config['aws_key'];
-                }
-
-                if (isset($config['aws_secret_key'])) {
-                    $options['secret'] = $config['aws_secret_key'];
-                }
-
-                $this->amazonS3 = new \AmazonS3($options);
-            }
-        } catch (\CFCredentials_Exception $e) {
-            throw new \RuntimeException('Exception thrown by \AmazonS3: ' . $e->getMessage(), null, $e);
+        if (isset($config['s3_client'])) {
+            $this->setS3Client($config['s3_client']);
         }
 
         if (isset($config['bucket'])) {
@@ -158,29 +132,33 @@ class AmazonS3Adapter implements AdapterInterface
         if (isset($config['filename_filter'])) {
             $this->setFilenameFilter($config['filename_filter']);
         }
+
+        if (isset($config['throw_exceptions'])) {
+            $this->setThrowExceptions($config['throw_exceptions']);
+        }
     }
 
     /**
-     * Set the internal AmazonS3 instance.
+     * Set the internal Aws\S3\S3Client instance.
      *
-     * @param \AmazonS3
+     * @param Aws\S3\S3Client
      * @return AmazonS3
      */
-    public function setAmazonS3(\AmazonS3 $amazonS3)
+    public function setS3Client(S3Client $s3Client)
     {
-        $this->amazonS3 = $amazonS3;
+        $this->s3Client = $s3Client;
 
         return $this;
     }
 
     /**
-     * Get the internal AmazonS3 instance.
+     * Get the internal Aws\S3\S3Client instance.
      *
-     * @return \AmazonS3
+     * @return Aws\S3\S3Client
      */
-    public function getAmazonS3()
+    public function getS3Client()
     {
-        return $this->amazonS3;
+        return $this->s3Client;
     }
 
     /**
@@ -227,7 +205,7 @@ class AmazonS3Adapter implements AdapterInterface
     public function getStorageClass()
     {
         if (null === $this->storageClass) {
-            $this->setStorageClass(\AmazonS3::STORAGE_STANDARD);
+            $this->setStorageClass(\Aws\S3\Enum\StorageClass::STANDARD);
         }
 
         return $this->storageClass;
@@ -254,7 +232,7 @@ class AmazonS3Adapter implements AdapterInterface
     public function getAcl()
     {
         if (null === $this->acl) {
-            $this->setAcl(\AmazonS3::ACL_PRIVATE);
+            $this->setAcl(\Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS);
         }
 
         return $this->acl;
@@ -262,6 +240,9 @@ class AmazonS3Adapter implements AdapterInterface
 
     /**
      * Set the uri expiration time.
+     *
+     * Can bei either a Unix timestamp or a string that can be evaluated
+     * by strtotime.
      *
      * @param  string|integer $uriExpirationTime
      * @return AmazonS3
@@ -334,6 +315,29 @@ class AmazonS3Adapter implements AdapterInterface
     }
 
     /**
+     * Set whether to throw exceptions.
+     *
+     * @param boolean
+     * @return AmazonS3
+     */
+    public function setThrowExceptions($throwExceptions)
+    {
+        $this->throwExceptions = $throwExceptions;
+
+        return $this;
+    }
+
+    /**
+     * Get whether to throw exceptions.
+     *
+     * @return boolean
+     */
+    public function getThrowExceptions()
+    {
+        return $this->throwExceptions;
+    }
+
+    /**
      * Import a external local file.
      *
      * @param  string            $external The external local file
@@ -347,25 +351,35 @@ class AmazonS3Adapter implements AdapterInterface
             $file = $this->filenameFilter->filter($file);
         }
 
-        $opt = array(
-            'fileUpload' => (string) $external,
-            'acl'        => $this->getAcl(),
-            'storage'    => $this->getStorageClass()
+        if (!is_resource($external)) {
+            $external = fopen($external, 'r');
+        }
+
+        $params = array(
+            'Bucket'       => $this->getBucket(),
+            'Key'          => $file,
+            'Body'         => $external,
+            'ACL'          => $this->getAcl(),
+            'StorageClass' => $this->getStorageClass()
         );
 
-        $type = $this->getMimeTypeDetector()->detectFromFile($external);
+        $type = $this->getMimeTypeDetector()->detectFromFile($file);
 
         if (!empty($type)) {
-            $opt['contentType'] = $type;
+            $params['ContentType'] = $type;
         }
 
         try {
-            $response = $this->amazonS3->create_object($this->getBucket(), $file, $opt);
-        } catch (\S3_Exception $e) {
-            throw new \RuntimeException('Exception thrown by \AmazonS3: ' . $e->getMessage(), null, $e);
+            $this->s3Client->putObject($params);
+        } catch (S3Exception $e) {
+            if (!$this->getThrowExceptions()) {
+                return false;
+            }
+
+            throw new \RuntimeException('Exception thrown by Aws\S3\S3Client: ' . $e->getMessage(), null, $e);
         }
 
-        return $response->isOk();
+        return true;
     }
 
     /**
@@ -382,34 +396,39 @@ class AmazonS3Adapter implements AdapterInterface
             $file = $this->filenameFilter->filter($file);
         }
 
-        $opt = array(
-            'acl'     => $this->getAcl(),
-            'storage' => $this->getStorageClass()
-        );
-
         if (is_resource($data)) {
-            $opt['fileUpload'] = $data;
             $type = $this->getMimeTypeDetector()->detectFromResource($data);
         } else {
             if (is_array($data)) {
                 $data = implode('', $data);
             }
 
-            $opt['body'] = $data;
             $type = $this->getMimeTypeDetector()->detectFromString($data);
         }
 
+        $params = array(
+            'Bucket'       => $this->getBucket(),
+            'Key'          => $file,
+            'Body'         => $data,
+            'ACL'          => $this->getAcl(),
+            'StorageClass' => $this->getStorageClass()
+        );
+
         if (!empty($type)) {
-            $opt['contentType'] = $type;
+            $params['ContentType'] = $type;
         }
 
         try {
-            $response = $this->amazonS3->create_object($this->getBucket(), $file, $opt);
-        } catch (\S3_Exception $e) {
-            throw new \RuntimeException('Exception thrown by \AmazonS3: ' . $e->getMessage(), null, $e);
+            $this->s3Client->putObject($params);
+        } catch (S3Exception $e) {
+            if (!$this->getThrowExceptions()) {
+                return false;
+            }
+
+            throw new \RuntimeException('Exception thrown by Aws\S3\S3Client: ' . $e->getMessage(), null, $e);
         }
 
-        return $response->isOk();
+        return true;
     }
 
     /**
@@ -420,20 +439,26 @@ class AmazonS3Adapter implements AdapterInterface
      */
     public function read($file)
     {
-        $fp = $this->stream($file);
-
-        if (!$fp) {
-            return false;
+        if (null !== $this->filenameFilter) {
+            $file = $this->filenameFilter->filter($file);
         }
 
-        $data = '';
-        while (!feof($fp)) {
-            $data .= fread($fp, 4096);
+        $params = array(
+            'Bucket' => $this->getBucket(),
+            'Key'    => $file
+        );
+
+        try {
+            $response = $this->s3Client->getObject($params);
+        } catch (S3Exception $e) {
+            if (!$this->getThrowExceptions()) {
+                return false;
+            }
+
+            throw new \RuntimeException('Exception thrown by Aws\S3\S3Client: ' . $e->getMessage(), null, $e);
         }
 
-        fclose($fp);
-
-        return $data;
+        return $response->get('Body')->__toString();
     }
 
     /**
@@ -449,25 +474,22 @@ class AmazonS3Adapter implements AdapterInterface
             $file = $this->filenameFilter->filter($file);
         }
 
-        $tmp = tmpfile();
-
-        $opt = array(
-            'fileDownload' => $tmp
+        $params = array(
+            'Bucket' => $this->getBucket(),
+            'Key'    => $file
         );
 
         try {
-            $response = $this->amazonS3->get_object($this->getBucket(), $file, $opt);
-        } catch (\S3_Exception $e) {
-            throw new \RuntimeException('Exception thrown by \AmazonS3: ' . $e->getMessage(), null, $e);
+            $response = $this->s3Client->getObject($params);
+        } catch (S3Exception $e) {
+            if (!$this->getThrowExceptions()) {
+                return false;
+            }
+
+            throw new \RuntimeException('Exception thrown by Aws\S3\S3Client: ' . $e->getMessage(), null, $e);
         }
 
-        if (!$response->isOk()) {
-            return false;
-        }
-
-        rewind($tmp);
-
-        return $tmp;
+        return $response->get('Body')->getStream();
     }
 
     /**
@@ -485,28 +507,25 @@ class AmazonS3Adapter implements AdapterInterface
             $dest = $this->filenameFilter->filter($dest);
         }
 
-        $src = array(
-            'bucket'   => $this->getBucket(),
-            'filename' => $src
-        );
-
-        $dest = array(
-            'bucket'   => $this->getBucket(),
-            'filename' => $dest
-        );
-
-        $opt = array(
-            'acl'     => $this->getAcl(),
-            'storage' => $this->getStorageClass()
+        $params = array(
+            'Bucket'       => $this->getBucket(),
+            'Key'          => $dest,
+            'ACL'          => $this->getAcl(),
+            'StorageClass' => $this->getStorageClass(),
+            'CopySource'   => urlencode($this->getBucket() . '/' . $src)
         );
 
         try {
-            $response = $this->amazonS3->copy_object($src, $dest, $opt);
-        } catch (\S3_Exception $e) {
-            throw new \RuntimeException('Exception thrown by \AmazonS3: ' . $e->getMessage(), null, $e);
+            $this->s3Client->copyObject($params);
+        } catch (S3Exception $e) {
+            if (!$this->getThrowExceptions()) {
+                return false;
+            }
+
+            throw new \RuntimeException('Exception thrown by Aws\S3\S3Client: ' . $e->getMessage(), null, $e);
         }
 
-        return $response->isOk();
+        return true;
     }
 
     /**
@@ -540,13 +559,22 @@ class AmazonS3Adapter implements AdapterInterface
             $file = $this->filenameFilter->filter($file);
         }
 
+        $params = array(
+            'Bucket' => $this->getBucket(),
+            'Key'    => $file
+        );
+
         try {
-            $response = $this->amazonS3->delete_object($this->getBucket(), $file);
-        } catch (\S3_Exception $e) {
-            throw new \RuntimeException('Exception thrown by \AmazonS3: ' . $e->getMessage(), null, $e);
+            $this->s3Client->deleteObject($params);
+        } catch (S3Exception $e) {
+            if (!$this->getThrowExceptions()) {
+                return false;
+            }
+
+            throw new \RuntimeException('Exception thrown by Aws\S3\S3Client: ' . $e->getMessage(), null, $e);
         }
 
-        return $response->isOk();
+        return true;
     }
 
     /**
@@ -563,9 +591,13 @@ class AmazonS3Adapter implements AdapterInterface
         }
 
         try {
-            return $this->amazonS3->if_object_exists($this->getBucket(), $file) === true;
-        } catch (\S3_Exception $e) {
-            throw new \RuntimeException('Exception thrown by \AmazonS3: ' . $e->getMessage(), null, $e);
+            return $this->s3Client->doesObjectExist($this->getBucket(), $file);
+        } catch (S3Exception $e) {
+            if (!$this->getThrowExceptions()) {
+                return false;
+            }
+
+            throw new \RuntimeException('Exception thrown by Aws\S3\S3Client: ' . $e->getMessage(), null, $e);
         }
     }
 
@@ -582,23 +614,28 @@ class AmazonS3Adapter implements AdapterInterface
             $file = $this->filenameFilter->filter($file);
         }
 
+        $params = array(
+            'Bucket' => $this->getBucket(),
+            'Key'    => $file
+        );
+
         try {
-            $response = $this->amazonS3->get_object_headers($this->getBucket(), $file);
-        } catch (\S3_Exception $e) {
-            throw new \RuntimeException('Exception thrown by \AmazonS3: ' . $e->getMessage(), null, $e);
+            $response = $this->s3Client->headObject($params);
+        } catch (S3Exception $e) {
+            if (!$this->getThrowExceptions()) {
+                return false;
+            }
+
+            throw new \RuntimeException('Exception thrown by Aws\S3\S3Client: ' . $e->getMessage(), null, $e);
         }
 
-        if (!$response->isOk()) {
+        $size = $response->get('ContentLength');
+
+        if (null === $size) {
             return false;
         }
 
-        $header = array_change_key_case($response->header, CASE_LOWER);
-
-        if (!isset($header['content-length'])) {
-            return false;
-        }
-
-        return (integer) $header['content-length'];
+        return (integer) $size;
     }
 
     /**
@@ -614,23 +651,22 @@ class AmazonS3Adapter implements AdapterInterface
             $file = $this->filenameFilter->filter($file);
         }
 
+        $params = array(
+            'Bucket' => $this->getBucket(),
+            'Key'    => $file
+        );
+
         try {
-            $response = $this->amazonS3->get_object_headers($this->getBucket(), $file);
-        } catch (\S3_Exception $e) {
-            throw new \RuntimeException('Exception thrown by \AmazonS3: ' . $e->getMessage(), null, $e);
+            $response = $this->s3Client->headObject($params);
+        } catch (S3Exception $e) {
+            if (!$this->getThrowExceptions()) {
+                return null;
+            }
+
+            throw new \RuntimeException('Exception thrown by Aws\S3\S3Client: ' . $e->getMessage(), null, $e);
         }
 
-        if (!$response->isOk()) {
-            return null;
-        }
-
-        $header = array_change_key_case($response->header, CASE_LOWER);
-
-        if (!isset($header['content-type'])) {
-            return null;
-        }
-
-        return $header['content-type'];
+        return $response->get('ContentType');
     }
 
     /**
@@ -647,9 +683,14 @@ class AmazonS3Adapter implements AdapterInterface
         }
 
         try {
-            return $this->amazonS3->get_object_url($this->getBucket(), $file, $this->getUriExpirationTime());
-        } catch (\S3_Exception $e) {
-            throw new \RuntimeException('Exception thrown by \AmazonS3: ' . $e->getMessage(), null, $e);
+            $request = $this->s3Client->get($this->getBucket() . '/' . $file);
+            return $this->s3Client->getPresignedUrl($request, $this->getUriExpirationTime());
+        } catch (S3Exception $e) {
+            if (!$this->getThrowExceptions()) {
+                return null;
+            }
+
+            throw new \RuntimeException('Exception thrown by Aws\S3\S3Client: ' . $e->getMessage(), null, $e);
         }
     }
 }

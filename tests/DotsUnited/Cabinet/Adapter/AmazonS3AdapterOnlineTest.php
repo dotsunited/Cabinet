@@ -11,6 +11,8 @@
 
 namespace DotsUnited\Cabinet\Adapter;
 
+use Aws\S3\S3Client;
+
 /**
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  *
@@ -18,51 +20,37 @@ namespace DotsUnited\Cabinet\Adapter;
  */
 class AmazonS3AdapterOnlineTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var \AmazonS3
-     */
-    private $amazonS3;
+    private $s3Client;
 
     private function setupAdapter($invalid = false)
     {
-        if (!class_exists('\CFRuntime')) {
-            $this->markTestSkipped(
-                'AWS SDK for PHP is not available. Install dev requirements with "php composer.phar install --dev".'
-            );
-
-            return false;
-        }
-
         $bucket = constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_BUCKET_NAME');
 
         if ($invalid) {
-            $amazonS3 = new \AmazonS3(array('key' => 'foo', 'secret' => 'bar', 'certificate_authority' => true));
+            $s3Client = S3Client::factory(array(
+                'key'    => 'foo',
+                'secret' => 'bar',
+            ));
         } else {
-            $key = constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_AWS_KEY');
+            $key    = constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_AWS_KEY');
             $secret = constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_AWS_SECRET_KEY');
-            $this->amazonS3 = $amazonS3 = new \AmazonS3(array('key' => $key, 'secret' => $secret, 'certificate_authority' => true));
+            $region = constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_BUCKET_REGION');
+            
+            $this->s3Client = $s3Client = S3Client::factory(array(
+                'key'    => $key,
+                'secret' => $secret,
+                'region' => $region
+            ));
 
-            // From the SDK examples
-            if (!$amazonS3->if_bucket_exists($bucket)) {
-                $region = constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_BUCKET_REGION');
+            if (!$s3Client->doesBucketExist($bucket)) {
+                $s3Client->createBucket(array(
+                    'Bucket' => $bucket
+                ));
 
-                if (!$region) {
-                    $region = \AmazonS3::REGION_US_E1;
-                }
-
-                $response = $amazonS3->create_bucket($bucket, $region);
-
-                if ($response->isOK()) {
-                    $exists = $amazonS3->if_bucket_exists($bucket);
-                    while (!$exists) {
-                        sleep(1);
-                        $exists = $amazonS3->if_bucket_exists($bucket);
-                    }
-                }
+                // Wait until the bucket is created
+                $s3Client->waitUntil('BucketExists', array('Bucket' => $bucket));
             } else {
-                if ($amazonS3->get_bucket_object_count($bucket) > 0) {
-                    $amazonS3->delete_all_objects($bucket);
-                }
+                $s3Client->clearBucket($bucket);
             }
         }
 
@@ -85,9 +73,10 @@ class AmazonS3AdapterOnlineTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('text/plain'));
 
         $config = array(
-            'amazon_s3'          => $amazonS3,
+            's3_client'          => $s3Client,
             'bucket'             => $bucket,
-            'mime_type_detector' => $mimeTypeDetector
+            'mime_type_detector' => $mimeTypeDetector,
+            'throw_exceptions'   => !$invalid
         );
 
         $adapter = new AmazonS3Adapter($config);
@@ -98,37 +87,7 @@ class AmazonS3AdapterOnlineTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         if (!constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_ENABLED') || constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_ENABLED') != 'true') {
-            $this->markTestSkipped('DotsUnited\Cabinet\Adapter\AmazonS3 online tests are not enabled');
-        }
-    }
-
-    /**************************************************************************/
-
-    public function testAWSSettings()
-    {
-        if (!$adapter = $this->setupAdapter()) {
-            return;
-        }
-
-        $adapter
-            ->setAcl(\AmazonS3::ACL_PUBLIC)
-            ->setStorageClass(\AmazonS3::STORAGE_REDUCED);
-
-        $adapter->write('subdir/testWriteString.txt', 'somedata');
-
-        $metadata = $adapter->getAmazonS3()->get_object_metadata($adapter->getBucket(), 'subdir/testWriteString.txt');
-
-        $this->assertEquals(\AmazonS3::STORAGE_REDUCED, $metadata['StorageClass']);
-
-        $found = false;
-        foreach ($metadata['ACL'] as $item) {
-            if ($item['id'] == 'http://acs.amazonaws.com/groups/global/AllUsers' && $item['permission'] == 'READ') {
-                $found = true;
-            }
-        }
-
-        if (!$found) {
-            $this->fail('Could not find correct permission in metadata');
+            $this->markTestSkipped('DotsUnited\Cabinet\Adapter\AmazonS3Adapter online tests are not enabled');
         }
     }
 
