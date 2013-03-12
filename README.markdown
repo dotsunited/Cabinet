@@ -20,7 +20,7 @@ Installation
 Cabinet can be installed using the [Composer](http://packagist.org) tool. You can either add `dotsunited/cabinet` to the dependencies in your composer.json, or if you want to install Cabinet as standalone, go to the main directory and run:
 
 ```bash
-$ wget http://getcomposer.org/composer.phar 
+$ wget http://getcomposer.org/composer.phar
 $ php composer.phar install
 ```
 
@@ -193,10 +193,8 @@ Configuration parameters for `DotsUnited\Cabinet\Adapter\StreamAdapter`:
 
 Configuration parameters for `DotsUnited\Cabinet\Adapter\AmazonS3Adapter`:
 
-  * `aws_key`:
-    The AWS key for your account.
-  * `aws_secret_key`:
-    The AWS secret key for your account.
+  * `s3_client`:
+    A `Aws\S3\S3Client` instance (See the [AWS SDK docs](http://docs.aws.amazon.com/aws-sdk-php-2/guide/latest/service-s3.html#creating-a-client)).
   * `bucket`:
     Bucket where to store the files.
   * `storage_class`:
@@ -205,6 +203,8 @@ Configuration parameters for `DotsUnited\Cabinet\Adapter\AmazonS3Adapter`:
     The ACL settings for files. Allowed values: `private`, `public-read`, `public-read-write`, `authenticated-read`, `bucket-owner-read`, `bucket-owner-full-control`. The default value is `private`.
   * `uri_expiration_time`:
     The expiration time for web-accessible URIs if you store private files. This can bei either a timestamp or a string parsable by `strtotime()`.
+  * `throw_exceptions`:
+    A boolean indicating whether to throw exceptions (Exceptions from the `Aws\S3\S3Client` are catched and rethrown as `\RuntimeException`).
   * `mime_type_detector`:
     An instance of `DotsUnited\Cabinet\MimeType\Detector\DetectorInterface` used to detect mime content types. This is optional, default is `DotsUnited\Cabinet\MimeType\Detector\Fileinfo`.
   * `filename_filter`:
