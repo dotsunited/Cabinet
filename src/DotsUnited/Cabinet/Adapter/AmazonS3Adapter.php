@@ -628,9 +628,9 @@ class AmazonS3Adapter implements AdapterInterface
             throw new \RuntimeException('Exception thrown by Aws\S3\S3Client: ' . $e->getMessage(), null, $e);
         }
 
-        $size = $response->get('ContentLength');
+        $size = (string) $response->get('ContentLength');
 
-        if (null === $size) {
+        if ('' === $size) {
             return false;
         }
 
@@ -665,7 +665,13 @@ class AmazonS3Adapter implements AdapterInterface
             throw new \RuntimeException('Exception thrown by Aws\S3\S3Client: ' . $e->getMessage(), null, $e);
         }
 
-        return $response->get('ContentType');
+        $contentType = (string) $response->get('ContentType');
+
+        if ('' === $contentType) {
+            return null;
+        }
+
+        return $contentType;
     }
 
     /**
