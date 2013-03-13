@@ -139,12 +139,12 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $external = fopen(__DIR__ . '/_files/test.txt', 'r');
+        $external = __DIR__ . '/_files/test.txt';
 
         $params = array(
             'Bucket'       => 'testbucket',
             'Key'          => 'subdir/testImport.txt',
-            'Body'         => $external,
+            'SourceFile'   => $external,
             'ACL'          => \Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS,
             'StorageClass' => \Aws\S3\Enum\StorageClass::STANDARD,
             'ContentType' => 'text/plain'

@@ -351,14 +351,10 @@ class AmazonS3Adapter implements AdapterInterface
             $file = $this->filenameFilter->filter($file);
         }
 
-        if (!is_resource($external)) {
-            $external = fopen($external, 'r');
-        }
-
         $params = array(
             'Bucket'       => $this->getBucket(),
             'Key'          => $file,
-            'Body'         => $external,
+            'SourceFile'   => $external,
             'ACL'          => $this->getAcl(),
             'StorageClass' => $this->getStorageClass()
         );
