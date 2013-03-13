@@ -89,7 +89,7 @@ class AmazonS3Adapter implements AdapterInterface
      * @var \DotsUnited\Cabinet\Filter\FilterInterface
      */
     private $filenameFilter;
-    
+
     /**
      * Whether to throw exceptions.
      *
@@ -485,7 +485,10 @@ class AmazonS3Adapter implements AdapterInterface
             throw new \RuntimeException('Exception thrown by Aws\S3\S3Client: ' . $e->getMessage(), null, $e);
         }
 
-        return $response->get('Body')->getStream();
+        $body = $response->get('Body');
+        $body->rewind();
+
+        return $body->getStream();
     }
 
     /**
