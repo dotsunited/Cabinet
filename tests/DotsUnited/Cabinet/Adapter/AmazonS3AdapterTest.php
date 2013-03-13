@@ -349,7 +349,7 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             'Key'          => 'subdir/testCopy_copy.txt',
             'ACL'          => \Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS,
             'StorageClass' => \Aws\S3\Enum\StorageClass::STANDARD,
-            'CopySource'   => urlencode('testbucket/subdir/testCopy.txt')
+            'CopySource'   => '/testbucket/subdir%2FtestCopy.txt'
         );
 
         $adapter->getS3Client()
@@ -390,7 +390,7 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             'Key'          => 'subdir/testRename_rename.txt',
             'ACL'          => \Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS,
             'StorageClass' => \Aws\S3\Enum\StorageClass::STANDARD,
-            'CopySource'   => urlencode('testbucket/subdir/testRename.txt')
+            'CopySource'   => '/testbucket/subdir%2FtestRename.txt'
         );
 
         $adapter->getS3Client()

@@ -511,7 +511,7 @@ class AmazonS3Adapter implements AdapterInterface
             'Key'          => $dest,
             'ACL'          => $this->getAcl(),
             'StorageClass' => $this->getStorageClass(),
-            'CopySource'   => urlencode($this->getBucket() . '/' . $src)
+            'CopySource'   => '/' . $this->getBucket() . '/' . rawurlencode($src)
         );
 
         try {
