@@ -18,10 +18,10 @@
     },
     "require-dev": {
         "mikey179/vfsStream": "1.1.*",
-        "amazonwebservices/aws-sdk-for-php": "1.5.*"
+        "aws/aws-sdk-php": "2.*"
     },
     "suggest": {
-        "amazonwebservices/aws-sdk-for-php": "1.5.*"
+        "aws/aws-sdk-php": "2.*"
     },
     "autoload": {
         "psr-0": {

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.9.5 (2013-xx-xx)
+------------------
+
+  * BC Break: The AmazonS3Adapter now uses the new AWS SDK for PHP 2
+
 0.9.4 (2012-09-27)
 ------------------
 
