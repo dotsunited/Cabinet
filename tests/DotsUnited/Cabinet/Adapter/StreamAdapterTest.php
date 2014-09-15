@@ -287,10 +287,6 @@ class StreamAdapterTest extends \PHPUnit_Framework_TestCase
 
         $vfsRoot = \org\bovigo\vfs\vfsStreamWrapper::getRoot();
 
-        $return = $adapter->unlink('subdir/test.txt');
-
-        $this->assertFalse($return);
-
         $this->testWriteString();
 
         $return = $adapter->unlink('subdir/test.txt');

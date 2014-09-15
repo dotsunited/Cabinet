@@ -177,10 +177,6 @@ class StreamAdapterHashedSubpathFilterIntegrationTest extends \PHPUnit_Framework
 
         $vfsRoot = \org\bovigo\vfs\vfsStreamWrapper::getRoot();
 
-        $return = $adapter->unlink('subdir/test.txt');
-
-        $this->assertFalse($return);
-
         $this->testWriteString();
 
         $return = $adapter->unlink('subdir/test.txt');
