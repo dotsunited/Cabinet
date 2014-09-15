@@ -6,10 +6,14 @@ php:
   - 5.4
   - 5.5
 
-before_script:
+before_install:
+  - composer self-update
+
+install:
   - composer install --dev --prefer-source
 
-script: phpunit --coverage-text --configuration phpunit.travis.xml
+script:
+  - phpunit --coverage-text --configuration phpunit.travis.xml
 
 notifications:
   email: false
