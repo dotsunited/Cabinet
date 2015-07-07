@@ -28,8 +28,12 @@ class AmazonS3AdapterOnlineTest extends \PHPUnit_Framework_TestCase
 
         if ($invalid) {
             $s3Client = S3Client::factory(array(
-                'key'    => 'foo',
-                'secret' => 'bar',
+                'credentials' => array(
+                    'key'    => 'foo',
+                    'secret' => 'bar',
+                ),
+                'region'  => 'us-east-1',
+                'version' => '2006-03-01'
             ));
         } else {
             $key    = constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_AWS_KEY');
@@ -37,14 +41,18 @@ class AmazonS3AdapterOnlineTest extends \PHPUnit_Framework_TestCase
             $region = constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_BUCKET_REGION');
             
             $this->s3Client = $s3Client = S3Client::factory(array(
-                'key'    => $key,
-                'secret' => $secret,
-                'region' => $region
+                'credentials' => array(
+                    'key'    => $key,
+                    'secret' => $secret,
+                ),
+                'region'  => $region,
+                'version' => '2006-03-01'
             ));
 
             if (!$s3Client->doesBucketExist($bucket)) {
                 $s3Client->createBucket(array(
-                    'Bucket' => $bucket
+                    'Bucket' => $bucket,
+                    'LocationConstraint' => $region
                 ));
 
                 // Wait until the bucket is created

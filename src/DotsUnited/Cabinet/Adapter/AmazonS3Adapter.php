@@ -43,10 +43,10 @@ class AmazonS3Adapter implements AdapterInterface
      * The storage class setting for files.
      *
      * Allowed values:
-     *   Aws\S3\Enum\StorageClass::STANDARD
-     *   Aws\S3\Enum\StorageClass::REDUCED_REDUNDANCY
+     *   'STANDARD'
+     *   'REDUCED_REDUNDANCY'
      *
-     * The default value is Aws\S3\Enum\StorageClass::STANDARD.
+     * The default value is 'STANDARD'.
      *
      * @var string
      */
@@ -56,14 +56,14 @@ class AmazonS3Adapter implements AdapterInterface
      * The ACL settings for files.
      *
      * Allowed values:
-     *   Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS
-     *   Aws\S3\Enum\CannedAcl::PUBLIC_READ
-     *   Aws\S3\Enum\CannedAcl::PUBLIC_READ_WRITE
-     *   Aws\S3\Enum\CannedAcl::AUTHENTICATED_READ
-     *   Aws\S3\Enum\CannedAcl::BUCKET_OWNER_READ
-     *   Aws\S3\Enum\CannedAcl::BUCKET_OWNER_FULL_CONTROL
+     *   'private'
+     *   'public-read'
+     *   'public-read-write'
+     *   'authenticated-read'
+     *   'bucket-owner-read'
+     *   'bucket-owner-full-control'
      *
-     * The default value is Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS.
+     * The default value is 'private'.
      *
      * @var string
      */
@@ -205,7 +205,7 @@ class AmazonS3Adapter implements AdapterInterface
     public function getStorageClass()
     {
         if (null === $this->storageClass) {
-            $this->setStorageClass(\Aws\S3\Enum\StorageClass::STANDARD);
+            $this->setStorageClass('STANDARD');
         }
 
         return $this->storageClass;
@@ -232,7 +232,7 @@ class AmazonS3Adapter implements AdapterInterface
     public function getAcl()
     {
         if (null === $this->acl) {
-            $this->setAcl(\Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS);
+            $this->setAcl('private');
         }
 
         return $this->acl;

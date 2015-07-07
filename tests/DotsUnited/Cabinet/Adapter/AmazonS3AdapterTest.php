@@ -90,8 +90,8 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Aws\S3\S3Client', $adapter->getS3Client());
         $this->assertNull($adapter->getBucket());
-        $this->assertEquals(\Aws\S3\Enum\StorageClass::STANDARD, $adapter->getStorageClass());
-        $this->assertEquals(\Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS, $adapter->getAcl());
+        $this->assertEquals('STANDARD', $adapter->getStorageClass());
+        $this->assertEquals('private', $adapter->getAcl());
         $this->assertSame(0, $adapter->getUriExpirationTime());
         $this->assertInstanceOf('DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector', $adapter->getMimeTypeDetector());
         $this->assertNull($adapter->getFilenameFilter());
@@ -112,8 +112,8 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
         $config = array(
             's3_client'           => $s3Client,
             'bucket'              => 'testbucket',
-            'storage_class'       => \Aws\S3\Enum\StorageClass::REDUCED_REDUNDANCY,
-            'acl'                 => \Aws\S3\Enum\CannedAcl::PUBLIC_READ,
+            'storage_class'       => 'REDUCED_REDUNDANCY',
+            'acl'                 => 'public-read',
             'uri_expiration_time' => 12345,
             'mime_type_detector'  => $detectorMock,
             'filename_filter'     => $filterMock
@@ -145,8 +145,8 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             'Bucket'       => 'testbucket',
             'Key'          => 'subdir/testImport.txt',
             'SourceFile'   => $external,
-            'ACL'          => \Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS,
-            'StorageClass' => \Aws\S3\Enum\StorageClass::STANDARD,
+            'ACL'          => 'private',
+            'StorageClass' => 'STANDARD',
             'ContentType' => 'text/plain'
         );
 
@@ -187,8 +187,8 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             'Bucket'       => 'testbucket',
             'Key'          => 'subdir/testWriteString.txt',
             'Body'         => 'somedata',
-            'ACL'          => \Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS,
-            'StorageClass' => \Aws\S3\Enum\StorageClass::STANDARD,
+            'ACL'          => 'private',
+            'StorageClass' => 'STANDARD',
             'ContentType' => 'text/plain'
         );
 
@@ -214,8 +214,8 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             'Bucket'       => 'testbucket',
             'Key'          => 'subdir/testWriteResource.txt',
             'Body'         => $resource,
-            'ACL'          => \Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS,
-            'StorageClass' => \Aws\S3\Enum\StorageClass::STANDARD,
+            'ACL'          => 'private',
+            'StorageClass' => 'STANDARD',
             'ContentType' => 'text/plain'
         );
 
@@ -239,8 +239,8 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             'Bucket'       => 'testbucket',
             'Key'          => 'subdir/testWriteArray.txt',
             'Body'         => 'somedata',
-            'ACL'          => \Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS,
-            'StorageClass' => \Aws\S3\Enum\StorageClass::STANDARD,
+            'ACL'          => 'private',
+            'StorageClass' => 'STANDARD',
             'ContentType' => 'text/plain'
         );
 
@@ -347,8 +347,8 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
         $params = array(
             'Bucket'       => 'testbucket',
             'Key'          => 'subdir/testCopy_copy.txt',
-            'ACL'          => \Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS,
-            'StorageClass' => \Aws\S3\Enum\StorageClass::STANDARD,
+            'ACL'          => 'private',
+            'StorageClass' => 'STANDARD',
             'CopySource'   => '/testbucket/subdir%2FtestCopy.txt'
         );
 
@@ -388,8 +388,8 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
         $params = array(
             'Bucket'       => 'testbucket',
             'Key'          => 'subdir/testRename_rename.txt',
-            'ACL'          => \Aws\S3\Enum\CannedAcl::PRIVATE_ACCESS,
-            'StorageClass' => \Aws\S3\Enum\StorageClass::STANDARD,
+            'ACL'          => 'private',
+            'StorageClass' => 'STANDARD',
             'CopySource'   => '/testbucket/subdir%2FtestRename.txt'
         );
 
