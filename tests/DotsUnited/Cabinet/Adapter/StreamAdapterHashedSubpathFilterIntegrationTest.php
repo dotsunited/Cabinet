@@ -12,6 +12,7 @@
 namespace DotsUnited\Cabinet\Adapter;
 
 use DotsUnited\Cabinet\Filter\HashedSubpathFilter;
+use DotsUnited\Cabinet\TestCase;
 
 /**
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
@@ -19,7 +20,7 @@ use DotsUnited\Cabinet\Filter\HashedSubpathFilter;
  * @covers  DotsUnited\Cabinet\Adapter\StreamAdapter
  * @covers  DotsUnited\Cabinet\Filter\HashedSubpathFilter
  */
-class StreamAdapterHashedSubpathFilterIntegrationTest extends \PHPUnit_Framework_TestCase
+class StreamAdapterHashedSubpathFilterIntegrationTest extends TestCase
 {
     private function setupAdapter()
     {

@@ -11,12 +11,14 @@
 
 namespace DotsUnited\Cabinet\Adapter;
 
+use DotsUnited\Cabinet\TestCase;
+
 /**
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  *
  * @covers  DotsUnited\Cabinet\Adapter\AmazonS3Adapter
  */
-class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
+class AmazonS3AdapterTest extends TestCase
 {
     private function setupAdapter()
     {
@@ -285,7 +287,7 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
 
         $return = $adapter->read('subdir/test.txt');
 
-        $this->assertInternalType(\PHPUnit_Framework_Constraint_IsType::TYPE_STRING, $return);
+        $this->assertInternalType('string', $return);
     }
 
     public function testReadCatchesAmazonS3Exception()
@@ -318,7 +320,7 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->getResponse()));
 
         $return = $adapter->stream('subdir/test.txt');
-        $this->assertInternalType(\PHPUnit_Framework_Constraint_IsType::TYPE_RESOURCE, $return);
+        $this->assertInternalType('resource', $return);
     }
 
     public function testStreamCatchesAmazonS3Exception()
@@ -634,7 +636,8 @@ class AmazonS3AdapterTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $request = $this->getMock('Guzzle\Http\Message\RequestInterface');
+        $request = $this->getMockBuilder('Guzzle\Http\Message\RequestInterface')
+                        ->getMock();
 
         $adapter->getS3Client()
             ->expects($this->once())

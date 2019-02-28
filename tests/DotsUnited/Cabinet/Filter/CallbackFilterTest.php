@@ -11,12 +11,14 @@
 
 namespace DotsUnited\Cabinet\Filter;
 
+use DotsUnited\Cabinet\TestCase;
+
 /**
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  *
  * @covers  DotsUnited\Cabinet\Filter\CallbackFilter
  */
-class CallbackFilterTest extends \PHPUnit_Framework_TestCase
+class CallbackFilterTest extends TestCase
 {
     public function testCallback()
     {

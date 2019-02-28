@@ -11,12 +11,14 @@
 
 namespace DotsUnited\Cabinet\MimeType\Detector;
 
+use DotsUnited\Cabinet\TestCase;
+
 /**
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  *
  * @covers  DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector
  */
-class FileinfoDetectorTest extends \PHPUnit_Framework_TestCase
+class FileinfoDetectorTest extends TestCase
 {
     /**
      * @var DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector

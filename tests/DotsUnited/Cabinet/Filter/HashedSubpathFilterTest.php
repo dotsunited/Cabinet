@@ -11,12 +11,14 @@
 
 namespace DotsUnited\Cabinet\Filter;
 
+use DotsUnited\Cabinet\TestCase;
+
 /**
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  *
  * @covers  DotsUnited\Cabinet\Filter\HashedSubpathFilter
  */
-class HashedSubpathFilterTest extends \PHPUnit_Framework_TestCase
+class HashedSubpathFilterTest extends TestCase
 {
     public function testDefaultConfig()
     {

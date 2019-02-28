@@ -12,13 +12,14 @@
 namespace DotsUnited\Cabinet\Adapter;
 
 use Aws\S3\S3Client;
+use DotsUnited\Cabinet\TestCase;
 
 /**
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  *
  * @covers  DotsUnited\Cabinet\Adapter\AmazonS3Adapter
  */
-class AmazonS3AdapterOnlineTest extends \PHPUnit_Framework_TestCase
+class AmazonS3AdapterOnlineTest extends TestCase
 {
     private $s3Client;
 
@@ -39,7 +40,7 @@ class AmazonS3AdapterOnlineTest extends \PHPUnit_Framework_TestCase
             $key    = constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_AWS_KEY');
             $secret = constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_AWS_SECRET_KEY');
             $region = constant('TESTS_DOTSUNITED_CABINET_ADAPTER_AMAZONS3_ONLINE_BUCKET_REGION');
-            
+
             $this->s3Client = $s3Client = S3Client::factory(array(
                 'credentials' => array(
                     'key'    => $key,
@@ -206,7 +207,7 @@ class AmazonS3AdapterOnlineTest extends \PHPUnit_Framework_TestCase
 
         $return = $adapter->stream('subdir/testStream.txt');
 
-        $this->assertInternalType(\PHPUnit_Framework_Constraint_IsType::TYPE_RESOURCE, $return);
+        $this->assertInternalType('resource', $return);
     }
 
     public function testStreamFail()

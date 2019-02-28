@@ -11,12 +11,14 @@
 
 namespace DotsUnited\Cabinet\Adapter;
 
+use DotsUnited\Cabinet\TestCase;
+
 /**
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  *
  * @covers  DotsUnited\Cabinet\Adapter\StreamAdapter
  */
-class StreamAdapterTest extends \PHPUnit_Framework_TestCase
+class StreamAdapterTest extends TestCase
 {
     private function setupAdapter()
     {
@@ -54,7 +56,7 @@ class StreamAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($adapter->getBaseUri());
         $this->assertEquals(0700, $adapter->getDirectoryUmask());
         $this->assertEquals(0600, $adapter->getFileUmask());
-        $this->assertInternalType(\PHPUnit_Framework_Constraint_IsType::TYPE_RESOURCE, $adapter->getStreamContext());
+        $this->assertInternalType('resource', $adapter->getStreamContext());
         $this->assertInstanceOf('DotsUnited\Cabinet\MimeType\Detector\FileinfoDetector', $adapter->getMimeTypeDetector());
         $this->assertNull($adapter->getFilenameFilter());
     }
@@ -83,7 +85,7 @@ class StreamAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($config['base_uri'], $adapter->getBaseUri());
         $this->assertEquals($config['directory_umask'], $adapter->getDirectoryUmask());
         $this->assertEquals($config['file_umask'], $adapter->getFileUmask());
-        $this->assertInternalType(\PHPUnit_Framework_Constraint_IsType::TYPE_RESOURCE, $adapter->getStreamContext());
+        $this->assertInternalType('resource', $adapter->getStreamContext());
         $this->assertEquals($config['mime_type_detector'], $adapter->getMimeTypeDetector());
         $this->assertInstanceOf('DotsUnited\Cabinet\MimeType\Detector\DetectorInterface', $adapter->getMimeTypeDetector());
         $this->assertEquals($config['filename_filter'], $adapter->getFilenameFilter());

@@ -11,12 +11,14 @@
 
 namespace DotsUnited\Cabinet\Filter;
 
+use DotsUnited\Cabinet\TestCase;
+
 /**
  * @author  Jan Sorgalla <jan.sorgalla@dotsunited.de>
  *
  * @covers  DotsUnited\Cabinet\Filter\FilterChain
  */
-class FilterChainTest extends \PHPUnit_Framework_TestCase
+class FilterChainTest extends TestCase
 {
     public function testEmpty()
     {

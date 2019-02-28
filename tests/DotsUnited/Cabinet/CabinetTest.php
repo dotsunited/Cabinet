@@ -16,7 +16,7 @@ namespace DotsUnited\Cabinet;
  *
  * @covers  DotsUnited\Cabinet\Cabinet
  */
-class CabinetTest extends \PHPUnit_Framework_TestCase
+class CabinetTest extends TestCase
 {
     public function testFactoryAdapterClassName()
     {
